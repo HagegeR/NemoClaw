@@ -4,15 +4,8 @@ set -e
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT" || exit 1
-
-# GUI Git / minimal PATH often lacks nvm/npm — load nvm when present so npx works as fallback.
-if [ -z "${NVM_DIR:-}" ]; then
-  NVM_DIR="$HOME/.nvm"
-fi
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  # shellcheck source=/dev/null
-  . "$NVM_DIR/nvm.sh"
-fi
+# shellcheck source=scripts/husky-env.sh
+. "$REPO_ROOT/scripts/husky-env.sh"
 
 echo "pre-push: checking TypeScript types..."
 cd nemoclaw
