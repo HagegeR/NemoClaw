@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Full E2E: install → onboard → verify inference (REAL services, no mocks)
 #
 # Proves the COMPLETE user journey including real inference against

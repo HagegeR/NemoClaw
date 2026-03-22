@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Double onboard: verify that consecutive `nemoclaw onboard` runs recover
 # automatically from stale state (gateway, port forward, registry entries)
 # left behind by a previous run.
