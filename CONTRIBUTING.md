@@ -57,6 +57,25 @@ These are the primary `make` and `npm` targets for day-to-day development:
 | `cd nemoclaw && npm test` | Run plugin unit tests (Vitest) |
 | `make docs` | Build documentation (Sphinx/MyST) |
 | `make docs-live` | Serve docs locally with auto-rebuild |
+| `pre-commit run --all-files` | Optional: run shared hooks from `.pre-commit-config.yaml` — see below |
+
+### Optional: pre-commit
+
+The repository includes [`.pre-commit-config.yaml`](.pre-commit-config.yaml) for the [`pre-commit`](https://pre-commit.com/) framework. It **complements** [Husky](.husky/pre-commit), which runs lint-staged and Vitest when you commit.
+
+Install and run from the repository root:
+
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files   # good check before opening a PR, or after broad edits
+```
+
+`make check` remains the primary documented linter entry point. For pull requests, CI or local runs can scope checks with `pre-commit run --from-ref <base> --to-ref HEAD`.
+
+[prek](https://prek.j178.dev/) is an optional alternative runner that uses the same config file without installing Python; install it separately if you prefer that workflow.
+
+If `pre-commit` is on your `PATH`, [.husky/pre-push](.husky/pre-push) also runs it on the commits you are about to push (merge-base with `@{u}`, or the last commit if no upstream is set). Husky scripts prefer `node_modules/.bin` so type checks and lint-staged work when `npx` is missing from the environment (for example some GUI Git clients).
 
 ## Project Structure
 
