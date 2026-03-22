@@ -46,7 +46,7 @@ version_gte() {
 }
 
 if command -v openshell > /dev/null 2>&1; then
-  INSTALLED_VERSION="$(openshell --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo '0.0.0')"
+  INSTALLED_VERSION="$(openshell --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo '0.0.0')"
   if version_gte "$INSTALLED_VERSION" "$MIN_VERSION"; then
     info "openshell already installed: $INSTALLED_VERSION (>= $MIN_VERSION)"
     exit 0
