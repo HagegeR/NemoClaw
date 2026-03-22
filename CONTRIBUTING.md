@@ -57,25 +57,24 @@ These are the primary `make` and `npm` targets for day-to-day development:
 | `cd nemoclaw && npm test` | Run plugin unit tests (Vitest) |
 | `make docs` | Build documentation (Sphinx/MyST) |
 | `make docs-live` | Serve docs locally with auto-rebuild |
-| `pre-commit run --all-files` | Optional: run shared hooks from `.pre-commit-config.yaml` — see below |
+| `prek run --all-files` | Optional: run shared hooks from `.pre-commit-config.yaml` — see below |
 
-### Optional: pre-commit
+### Optional: prek (pre-commit–compatible)
 
-The repository includes [`.pre-commit-config.yaml`](.pre-commit-config.yaml) for the [`pre-commit`](https://pre-commit.com/) framework. It **complements** [Husky](.husky/pre-commit), which runs lint-staged and Vitest when you commit.
+The repository includes [`.pre-commit-config.yaml`](.pre-commit-config.yaml) for [prek](https://prek.j178.dev/) (recommended) and the Python [`pre-commit`](https://pre-commit.com/) runner — same file, either tool. This **complements** [Husky](.husky/pre-commit), which runs lint-staged and Vitest when you commit.
 
-Install and run from the repository root:
+Install **prek** (pick one): `brew install prek`, `uv tool install prek`, `pip install prek`, or the [standalone installer](https://prek.j178.dev/installation/). From the repository root:
 
 ```bash
-pip install pre-commit
-pre-commit install
-pre-commit run --all-files   # good check before opening a PR, or after broad edits
+prek install
+prek run --all-files   # good check before opening a PR, or after broad edits
 ```
 
-`make check` remains the primary documented linter entry point. For pull requests, CI or local runs can scope checks with `pre-commit run --from-ref <base> --to-ref HEAD`.
+`make check` remains the primary documented linter entry point. For scoped runs: `prek run --from-ref <base> --to-ref HEAD` (same flags work with `pre-commit` if you use that instead).
 
-[prek](https://prek.j178.dev/) is an optional alternative runner that uses the same config file without installing Python; install it separately if you prefer that workflow.
+If **prek** is not available, install [`pre-commit`](https://pre-commit.com/) and use `pre-commit install` / `pre-commit run --all-files` with the same config file.
 
-If `pre-commit` is on your `PATH`, [.husky/pre-push](.husky/pre-push) also runs it on the commits you are about to push (merge-base with `@{u}`, or the last commit if no upstream is set). Husky scripts prefer `node_modules/.bin` so type checks and lint-staged work when `npx` is missing from the environment (for example some GUI Git clients).
+If **prek** (or **pre-commit**) is on your `PATH`, [.husky/pre-push](.husky/pre-push) also runs it on the commits you are about to push (merge-base with `@{u}`, or the last commit if no upstream is set). Husky scripts prefer `node_modules/.bin` so type checks and lint-staged work when `npx` is missing from the environment (for example some GUI Git clients).
 
 ## Project Structure
 
