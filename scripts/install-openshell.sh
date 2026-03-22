@@ -30,9 +30,21 @@ esac
 
 info "Detected $OS_LABEL ($ARCH_LABEL)"
 
+# Minimum version required for cgroup v2 fix (NVIDIA/OpenShell#329)
+MIN_VERSION="0.0.7"
+
+version_gte() {
+  # Returns 0 (true) if $1 >= $2 using sort -V
+  [ "$(printf '%s\n%s' "$1" "$2" | sort -V | head -1)" = "$2" ]
+}
+
 if command -v openshell > /dev/null 2>&1; then
-  info "openshell already installed: $(openshell --version 2>&1 || echo 'unknown')"
-  exit 0
+  INSTALLED_VERSION="$(openshell --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo '0.0.0')"
+  if version_gte "$INSTALLED_VERSION" "$MIN_VERSION"; then
+    info "openshell already installed: $INSTALLED_VERSION (>= $MIN_VERSION)"
+    exit 0
+  fi
+  warn "openshell $INSTALLED_VERSION is below minimum $MIN_VERSION — upgrading..."
 fi
 
 info "Installing openshell CLI..."
