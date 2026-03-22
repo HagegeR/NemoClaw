@@ -1,10 +1,13 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 # Type checking and shared hooks before push — avoids a wasted CI round-trip.
 set -e
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT" || exit 1
-# shellcheck source=scripts/husky-env.sh
+# shellcheck disable=SC1091
 . "$REPO_ROOT/scripts/husky-env.sh"
 
 echo "pre-push: checking TypeScript types..."
@@ -29,8 +32,8 @@ fi
 # Falls back to pre-commit if prek is absent (same config file).
 if command -v prek >/dev/null 2>&1; then
   echo "pre-push: running prek on outgoing commits..."
-  if git rev-parse @{u} >/dev/null 2>&1; then
-    FROM=$(git merge-base HEAD @{u})
+  if git rev-parse '@{u}' >/dev/null 2>&1; then
+    FROM=$(git merge-base HEAD '@{u}')
     prek run --from-ref "$FROM" --to-ref HEAD
   elif git rev-parse HEAD~1 >/dev/null 2>&1; then
     prek run --from-ref HEAD~1 --to-ref HEAD
@@ -39,8 +42,8 @@ if command -v prek >/dev/null 2>&1; then
   fi
 elif command -v pre-commit >/dev/null 2>&1; then
   echo "pre-push: running pre-commit on outgoing commits..."
-  if git rev-parse @{u} >/dev/null 2>&1; then
-    FROM=$(git merge-base HEAD @{u})
+  if git rev-parse '@{u}' >/dev/null 2>&1; then
+    FROM=$(git merge-base HEAD '@{u}')
     pre-commit run --from-ref "$FROM" --to-ref HEAD
   elif git rev-parse HEAD~1 >/dev/null 2>&1; then
     pre-commit run --from-ref HEAD~1 --to-ref HEAD
