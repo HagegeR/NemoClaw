@@ -207,14 +207,34 @@ describe("runner helpers", () => {
       assert.ok(!src.includes("execSync"), "bridge-core.js should not use execSync");
     });
 
-    it("bridges use shared bridge-core module", () => {
+    it("bridge runner uses bridge-core for sandbox relay", () => {
       const fs = require("fs");
-      const tg = fs.readFileSync(path.join(__dirname, "..", "scripts", "telegram-bridge.js"), "utf-8");
-      const dc = fs.readFileSync(path.join(__dirname, "..", "scripts", "discord-bridge.js"), "utf-8");
-      const sl = fs.readFileSync(path.join(__dirname, "..", "scripts", "slack-bridge.js"), "utf-8");
-      assert.ok(tg.includes("require(\"./bridge-core\")"), "telegram-bridge.js must use bridge-core");
-      assert.ok(dc.includes("require(\"./bridge-core\")"), "discord-bridge.js must use bridge-core");
-      assert.ok(sl.includes("require(\"./bridge-core\")"), "slack-bridge.js must use bridge-core");
+      const src = fs.readFileSync(path.join(__dirname, "..", "scripts", "bridge.js"), "utf-8");
+      assert.ok(src.includes("require(\"./bridge-core\")"), "bridge.js must use bridge-core");
+      assert.ok(src.includes("runAgentInSandbox"), "bridge.js must use runAgentInSandbox");
+    });
+
+    it("each messaging adapter exists and exports a function", () => {
+      const fs = require("fs");
+      const adaptersDir = path.join(__dirname, "..", "scripts", "adapters", "messaging");
+      for (const name of ["telegram", "discord", "slack"]) {
+        const adapterPath = path.join(adaptersDir, `${name}.js`);
+        assert.ok(fs.existsSync(adapterPath), `adapter ${name}.js must exist`);
+        const src = fs.readFileSync(adapterPath, "utf-8");
+        assert.ok(src.includes("module.exports"), `${name}.js must export a function`);
+      }
+    });
+
+    it("each messaging bridge has a YAML config", () => {
+      const fs = require("fs");
+      const bridgesDir = path.join(__dirname, "..", "nemoclaw-blueprint", "bridges", "messaging");
+      for (const name of ["telegram", "discord", "slack"]) {
+        const yamlPath = path.join(bridgesDir, `${name}.yaml`);
+        assert.ok(fs.existsSync(yamlPath), `bridge config ${name}.yaml must exist`);
+        const src = fs.readFileSync(yamlPath, "utf-8");
+        assert.ok(src.includes("token_env:"), `${name}.yaml must specify token_env`);
+        assert.ok(src.includes("session_prefix:"), `${name}.yaml must specify session_prefix`);
+      }
     });
   });
 });

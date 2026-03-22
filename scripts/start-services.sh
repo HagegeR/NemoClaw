@@ -138,22 +138,18 @@ do_start() {
 
   mkdir -p "$PIDDIR"
 
-  # Telegram bridge (only if token provided)
+  # Messaging bridges — start each if its token is set
   if [ -n "${TELEGRAM_BOT_TOKEN:-}" ]; then
     SANDBOX_NAME="$SANDBOX_NAME" start_service telegram-bridge \
-      node "$REPO_DIR/scripts/telegram-bridge.js"
+      node "$REPO_DIR/scripts/bridge.js" telegram
   fi
-
-  # Discord bridge (only if token provided)
   if [ -n "${DISCORD_BOT_TOKEN:-}" ]; then
     SANDBOX_NAME="$SANDBOX_NAME" start_service discord-bridge \
-      node "$REPO_DIR/scripts/discord-bridge.js"
+      node "$REPO_DIR/scripts/bridge.js" discord
   fi
-
-  # Slack bridge (only if both tokens provided)
   if [ -n "${SLACK_BOT_TOKEN:-}" ] && [ -n "${SLACK_APP_TOKEN:-}" ]; then
     SANDBOX_NAME="$SANDBOX_NAME" start_service slack-bridge \
-      node "$REPO_DIR/scripts/slack-bridge.js"
+      node "$REPO_DIR/scripts/bridge.js" slack
   fi
 
   # cloudflared tunnel
