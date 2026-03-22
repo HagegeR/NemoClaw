@@ -19,6 +19,7 @@
 #
 # Priority groups (prek: same priority may run in parallel; stock pre-commit ignores priority):
 #   0  — General file fixers (whitespace, EOF, line endings)
+#   4  — SPDX header insertion (--fix)
 #   5  — Shell / Python / TS formatters (shfmt, ruff format, prettier)
 #   6  — Fixes that should follow formatters (ruff check --fix, eslint --fix)
 #  10  — Linters and read-only checks
@@ -37,6 +38,18 @@ repos:
       - id: mixed-line-ending
         args: ["--fix=lf"]
         priority: 0
+
+  # ── Priority 4: SPDX headers (insert if missing; runs before language formatters) ──
+  - repo: local
+    hooks:
+      - id: spdx-headers
+        name: SPDX license headers (insert if missing)
+        entry: bash scripts/check-spdx-headers.sh --fix
+        language: system
+        files: ^(nemoclaw/src/.*\.ts|nemoclaw-blueprint/.*\.py|.*\.sh|\.husky/.*)$
+        exclude: ^nemoclaw-blueprint/.*__init__\.py$
+        pass_filenames: true
+        priority: 4
 
   # ── Priority 5: formatters ────────────────────────────────────────────────
   - repo: https://github.com/scop/pre-commit-shfmt
@@ -120,16 +133,6 @@ repos:
     rev: v2.14.0
     hooks:
       - id: hadolint
-        priority: 10
-
-  - repo: local
-    hooks:
-      - id: spdx-headers
-        name: SPDX license headers
-        entry: bash scripts/check-spdx-headers.sh
-        language: system
-        files: ^(nemoclaw/src/.*\.ts|nemoclaw-blueprint/.*\.py|.*\.sh|\.husky/.*)$
-        pass_filenames: true
         priority: 10
 
   - repo: https://github.com/gitleaks/gitleaks

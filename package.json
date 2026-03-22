@@ -33,20 +33,23 @@
   },
   "lint-staged": {
     "nemoclaw/src/**/*.ts": [
-      "bash scripts/check-spdx-headers.sh",
+      "bash scripts/check-spdx-headers.sh --fix",
       "sh -c 'cd nemoclaw && npx eslint --fix \"$@\"' _",
       "sh -c 'cd nemoclaw && npx prettier --write \"$@\"' _"
     ],
     "nemoclaw-blueprint/**/*.py": [
-      "bash scripts/check-spdx-headers.sh",
+      "bash scripts/check-spdx-headers.sh --fix",
       "uvx ruff check --fix",
       "uvx ruff format"
     ],
     "**/*.sh": [
-      "bash scripts/check-spdx-headers.sh",
+      "bash scripts/check-spdx-headers.sh --fix",
       "npx shellcheck"
     ],
-    ".husky/{pre-commit,pre-push,commit-msg}": "npx shellcheck"
+    ".husky/{pre-commit,pre-push,commit-msg}": [
+      "bash scripts/check-spdx-headers.sh --fix",
+      "npx shellcheck"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
