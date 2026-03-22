@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
+
+if [ -z "${NVM_DIR:-}" ]; then
+  NVM_DIR="$HOME/.nvm"
+fi
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/nvm.sh"
+fi
+
+if [ -x ./node_modules/.bin/lint-staged ]; then
+  ./node_modules/.bin/lint-staged
+else
+  npx --no -- lint-staged
+fi
+
+cd nemoclaw
+if [ -x ./node_modules/.bin/vitest ]; then
+  ./node_modules/.bin/vitest run
+else
+  npx vitest run
+fi
