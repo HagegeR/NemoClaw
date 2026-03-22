@@ -1,12 +1,59 @@
 #!/bin/sh
-# Type checking — catches errors before wasting a CI round-trip.
+# Type checking and shared hooks before push — avoids a wasted CI round-trip.
+set -e
 
-# TypeScript
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
+
+# GUI Git / minimal PATH often lacks nvm/npm — load nvm when present so npx works as fallback.
+if [ -z "${NVM_DIR:-}" ]; then
+  NVM_DIR="$HOME/.nvm"
+fi
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/nvm.sh"
+fi
+
 echo "pre-push: checking TypeScript types..."
-(cd nemoclaw && npx tsc --noEmit) || exit 1
+cd nemoclaw
+if [ -x ./node_modules/.bin/tsc ]; then
+  ./node_modules/.bin/tsc --noEmit
+elif command -v npx >/dev/null 2>&1; then
+  npx tsc --noEmit
+else
+  echo "pre-push: tsc not found — run: cd nemoclaw && npm install" >&2
+  exit 1
+fi
+cd "$REPO_ROOT"
 
 # Pyright (Python) — skip if uv is not installed
 if command -v uv >/dev/null 2>&1; then
   echo "pre-push: checking Python types..."
   (cd nemoclaw-blueprint && uv run --with pyright pyright .) || exit 1
+fi
+
+# pre-commit: same hooks as .pre-commit-config.yaml — optional if not installed locally.
+# Falls back to prek if present (same config file).
+if command -v pre-commit >/dev/null 2>&1; then
+  echo "pre-push: running pre-commit on outgoing commits..."
+  if git rev-parse @{u} >/dev/null 2>&1; then
+    FROM=$(git merge-base HEAD @{u})
+    pre-commit run --from-ref "$FROM" --to-ref HEAD
+  elif git rev-parse HEAD~1 >/dev/null 2>&1; then
+    pre-commit run --from-ref HEAD~1 --to-ref HEAD
+  else
+    pre-commit run --all-files
+  fi
+elif command -v prek >/dev/null 2>&1; then
+  echo "pre-push: running prek on outgoing commits..."
+  if git rev-parse @{u} >/dev/null 2>&1; then
+    FROM=$(git merge-base HEAD @{u})
+    prek run --from-ref "$FROM" --to-ref HEAD
+  elif git rev-parse HEAD~1 >/dev/null 2>&1; then
+    prek run --from-ref HEAD~1 --to-ref HEAD
+  else
+    prek run --all-files
+  fi
+else
+  echo "pre-push: pre-commit not in PATH — skipping shared hooks (pip install pre-commit && pre-commit install). Optional: install prek for the same config without Python." >&2
 fi

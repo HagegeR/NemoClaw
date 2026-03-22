@@ -1,2 +1,18 @@
 #!/bin/sh
-npx --no -- commitlint --edit "$1"
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
+
+if [ -z "${NVM_DIR:-}" ]; then
+  NVM_DIR="$HOME/.nvm"
+fi
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/nvm.sh"
+fi
+
+if [ -x ./node_modules/.bin/commitlint ]; then
+  ./node_modules/.bin/commitlint --edit "$1"
+else
+  npx --no -- commitlint --edit "$1"
+fi
