@@ -53,7 +53,7 @@ jobs:
         run: npx prek run --all-files
 
       - name: Run pre-push hooks (tsc + pyright)
-        run: npx prek run --all-files --stage pre-push --skip prek-push-range
+        run: npx prek run --all-files --stage pre-push
 
   test-unit:
     runs-on: ubuntu-latest
