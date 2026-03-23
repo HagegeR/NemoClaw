@@ -20,6 +20,13 @@
 
 exclude: ^(nemoclaw/dist/|nemoclaw/node_modules/|docs/_build/|\.venv/|uv\.lock$)
 
+# Which git hook shims `prek install` writes (separate from each hook's `stages:`).
+# https://prek.j178.dev/configuration/#default_install_hook_types
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+  - pre-push
+
 repos:
   # ── Priority 0: general file fixers ───────────────────────────────────────
   - repo: https://github.com/pre-commit/pre-commit-hooks
