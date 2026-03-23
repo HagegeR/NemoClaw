@@ -17,7 +17,7 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,15 +36,24 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      - name: Install ruff
-        run: uv tool install ruff
+      - name: Install root dependencies
+        run: npm install --ignore-scripts
 
-      - name: Install Node dependencies
+      - name: Install and build TypeScript plugin
         working-directory: nemoclaw
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      - name: Run all linters
-        run: make check
+      - name: Install Python dependencies
+        working-directory: nemoclaw-blueprint
+        run: uv sync --extra dev
+
+      - name: Run all pre-commit hooks
+        run: npx prek run --all-files
+
+      - name: Run pre-push hooks (tsc + pyright)
+        run: npx prek run --all-files --stage pre-push --skip prek-push-range
 
   test-unit:
     runs-on: ubuntu-latest
