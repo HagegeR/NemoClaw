@@ -322,4 +322,3 @@ fi
 echo ""
 info "Done. If filing a bug, run with --output and attach the tarball to your issue:"
 info "  nemoclaw debug --output /tmp/nemoclaw-debug.tar.gz"
-
