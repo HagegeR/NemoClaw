@@ -36,6 +36,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Install hadolint
+        run: |
+          curl -fsSL -o /usr/local/bin/hadolint \
+            "https://github.com/hadolint/hadolint/releases/download/v2.14.0/hadolint-Linux-x86_64"
+          chmod +x /usr/local/bin/hadolint
+
       - name: Install dependencies
         run: |
           npm install --ignore-scripts
@@ -45,10 +51,7 @@ jobs:
       - name: Build TypeScript plugin
         run: cd nemoclaw && npm run build
 
-      - name: Run all pre-commit hooks
-        run: npx prek run --all-files
-
-      - name: Run pre-push hooks (tsc + pyright)
+      - name: Run all hooks (pre-commit + pre-push)
         run: npx prek run --all-files --stage pre-push
 
   test-unit:
