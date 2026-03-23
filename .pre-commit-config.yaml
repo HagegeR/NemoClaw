@@ -152,7 +152,7 @@ repos:
     hooks:
       - id: vitest-plugin
         name: Vitest (plugin project)
-        entry: npx vitest run --project plugin
+        entry: bash -c 'root="$(git rev-parse --show-toplevel)" && cd "$root" && exec ./node_modules/.bin/vitest run --project plugin'
         language: system
         pass_filenames: false
         files: ^nemoclaw/
