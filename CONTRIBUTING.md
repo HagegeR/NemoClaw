@@ -18,6 +18,7 @@ Install the following before you begin.
 - Python 3.11+ (for blueprint and documentation builds)
 - Docker (running)
 - [uv](https://docs.astral.sh/uv/) (for Python dependency management)
+- [hadolint](https://github.com/hadolint/hadolint) (Dockerfile linter — `brew install hadolint` on macOS)
 
 ## Getting Started
 
