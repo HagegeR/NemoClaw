@@ -71,6 +71,8 @@ All git hooks are managed by [prek](https://prek.j178.dev/), a fast, single-bina
 
 For a full manual check: `npx prek run --all-files`. For scoped runs: `npx prek run --from-ref <base> --to-ref HEAD`.
 
+If you still have `core.hooksPath` set from an old Husky setup, Git will ignore `.git/hooks`. Run `git config --unset core.hooksPath` in this repo, then `npm install` so `prek install` (via `prepare`) can register the hooks.
+
 `make check` remains the primary documented linter entry point.
 
 ## Project Structure

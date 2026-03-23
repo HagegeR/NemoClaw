@@ -1,8 +1,10 @@
 # NemoClaw — prek hook configuration
 # prek: https://github.com/j178/prek — single binary, no Python required for the runner
 # Installed as an npm devDependency (@j178/prek) — available after `npm install`.
-# All git hooks (pre-commit, commit-msg, pre-push) are managed by prek via this file.
-# The "prepare" script in package.json runs `prek install` to wire them up.
+# All git hooks (pre-commit, commit-msg, pre-push) are managed by prek via this file only.
+# The "prepare" script in package.json runs `prek install` (writes `.git/hooks/*`).
+# If you previously used Husky, run: git config --unset core.hooksPath
+# then `npm install` again so Git uses the hooks prek installs.
 #
 # Usage:
 #   npx prek install
@@ -189,6 +191,14 @@ repos:
       - id: pyright-check
         name: Pyright (nemoclaw-blueprint)
         entry: bash -c 'cd nemoclaw-blueprint && uv run --extra dev --with pyright pyright .'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+      - id: prek-push-range
+        name: Re-run pre-commit hooks on outgoing commits
+        entry: bash -c 'if git rev-parse "@{u}" >/dev/null 2>&1; then FROM=$(git merge-base HEAD "@{u}"); prek run --from-ref "$FROM" --to-ref HEAD; elif git rev-parse HEAD~1 >/dev/null 2>&1; then prek run --from-ref HEAD~1 --to-ref HEAD; else prek run --all-files; fi'
         language: system
         pass_filenames: false
         always_run: true
