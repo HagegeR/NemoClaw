@@ -168,14 +168,12 @@ repos:
         priority: 20
 
   # ── commit-msg hooks ────────────────────────────────────────────────────────
-  - repo: local
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.24.0
     hooks:
       - id: commitlint
-        name: commitlint
-        entry: npx commitlint --edit
-        language: system
         stages: [commit-msg]
-        always_run: true
+        additional_dependencies: ["@commitlint/config-conventional@20"]
 
   # ── pre-push hooks ─────────────────────────────────────────────────────────
   - repo: local
