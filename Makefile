@@ -6,6 +6,7 @@ check:
 
 lint: check
 
+# Targeted subproject checks (not part of `make check` — use for focused runs).
 lint-ts:
 	cd nemoclaw && npm run check
 

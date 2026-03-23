@@ -72,7 +72,7 @@ if ! command -v tmux >/dev/null 2>&1; then
   echo ""
   echo "  Terminal 2 (Agent):"
   echo "    openshell sandbox connect nemoclaw"
-  echo "    export NVIDIA_API_KEY=$NVIDIA_API_KEY"
+    echo '    export NVIDIA_API_KEY=<your-key>'
   echo "    nemoclaw-start"
   echo "    openclaw agent --agent main --local --session-id live"
   exit 0
