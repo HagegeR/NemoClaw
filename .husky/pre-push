@@ -25,7 +25,7 @@ cd "$REPO_ROOT"
 # Pyright (Python) — skip if uv is not installed
 if command -v uv >/dev/null 2>&1; then
   echo "pre-push: checking Python types..."
-  (cd nemoclaw-blueprint && uv run --with pyright pyright .) || exit 1
+  (cd nemoclaw-blueprint && uv run --extra dev --with pyright pyright .) || exit 1
 fi
 
 # prek or pre-commit: same hooks as .pre-commit-config.yaml — optional if not installed locally.
