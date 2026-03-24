@@ -154,15 +154,11 @@ wait $tail_pid 2>/dev/null || true
 
 # Source shell profile to pick up nvm/PATH changes from install.sh
 if [ -f "$HOME/.bashrc" ]; then
-  # shellcheck source=/dev/null
   source "$HOME/.bashrc" 2>/dev/null || true
 fi
 # Ensure nvm is loaded in current shell
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  # shellcheck source=/dev/null
-  . "$NVM_DIR/nvm.sh"
-fi
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # Ensure ~/.local/bin is on PATH (openshell may be installed there in non-interactive mode)
 if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"
@@ -191,11 +187,9 @@ else
   exit 1
 fi
 
-if nemoclaw --help >/dev/null 2>&1; then
-  pass "nemoclaw --help exits 0"
-else
-  fail "nemoclaw --help failed"
-fi
+nemoclaw --help >/dev/null 2>&1 \
+  && pass "nemoclaw --help exits 0" \
+  || fail "nemoclaw --help failed"
 
 # ══════════════════════════════════════════════════════════════════
 # Phase 3: Sandbox verification
@@ -204,17 +198,16 @@ section "Phase 3: Sandbox verification"
 
 # 3a: nemoclaw list
 if list_output=$(nemoclaw list 2>&1); then
-  if echo "$list_output" | grep -Fq -- "$SANDBOX_NAME"; then
-    pass "nemoclaw list contains '${SANDBOX_NAME}'"
-  else
-    fail "nemoclaw list does not contain '${SANDBOX_NAME}'"
-  fi
+  echo "$list_output" | grep -Fq -- "$SANDBOX_NAME" \
+    && pass "nemoclaw list contains '${SANDBOX_NAME}'" \
+    || fail "nemoclaw list does not contain '${SANDBOX_NAME}'"
 else
   fail "nemoclaw list failed: ${list_output:0:200}"
 fi
 
 # 3b: nemoclaw status
-if status_output=$(nemoclaw "$SANDBOX_NAME" status 2>&1); then
+status_output=$(nemoclaw "$SANDBOX_NAME" status 2>&1)
+if [ $? -eq 0 ]; then
   pass "nemoclaw ${SANDBOX_NAME} status exits 0"
 else
   fail "nemoclaw ${SANDBOX_NAME} status failed: ${status_output:0:200}"
@@ -223,29 +216,23 @@ fi
 # 3c: Inference must be configured by onboard (no fallback — if onboard
 # failed to configure it, that's a bug we want to catch)
 if inf_check=$(openshell inference get 2>&1); then
-  if echo "$inf_check" | grep -qi "nvidia-nim"; then
-    pass "Inference configured via onboard"
-  else
-    fail "Inference not configured — onboard did not set up nvidia-nim provider"
-  fi
+  echo "$inf_check" | grep -qi "nvidia-nim" \
+    && pass "Inference configured via onboard" \
+    || fail "Inference not configured — onboard did not set up nvidia-nim provider"
 else
   fail "openshell inference get failed: ${inf_check:0:200}"
 fi
 
 # 3d: Policy presets applied
 if policy_output=$(openshell policy get --full "$SANDBOX_NAME" 2>&1); then
-  if echo "$policy_output" | grep -qi "network_policies"; then
-    pass "Policy applied to sandbox"
-  else
-    fail "No network policy found on sandbox"
-  fi
+  echo "$policy_output" | grep -qi "network_policies" \
+    && pass "Policy applied to sandbox" \
+    || fail "No network policy found on sandbox"
 
   # Check that at least npm or pypi preset endpoints are present (onboard auto-suggests these)
-  if echo "$policy_output" | grep -qi "registry.npmjs.org\|pypi.org"; then
-    pass "Policy presets (npm/pypi) detected in sandbox policy"
-  else
-    skip "Could not confirm npm/pypi presets in policy (may vary by environment)"
-  fi
+  echo "$policy_output" | grep -qi "registry.npmjs.org\|pypi.org" \
+    && pass "Policy presets (npm/pypi) detected in sandbox policy" \
+    || skip "Could not confirm npm/pypi presets in policy (may vary by environment)"
 else
   fail "openshell policy get failed: ${policy_output:0:200}"
 fi
@@ -342,11 +329,9 @@ nemoclaw "$SANDBOX_NAME" destroy 2>&1 | tail -3 || true
 openshell gateway destroy -g nemoclaw 2>/dev/null || true
 
 list_after=$(nemoclaw list 2>&1)
-if echo "$list_after" | grep -Fq -- "$SANDBOX_NAME"; then
-  fail "Sandbox ${SANDBOX_NAME} still in list after destroy"
-else
-  pass "Sandbox ${SANDBOX_NAME} removed"
-fi
+echo "$list_after" | grep -Fq -- "$SANDBOX_NAME" \
+  && fail "Sandbox ${SANDBOX_NAME} still in list after destroy" \
+  || pass "Sandbox ${SANDBOX_NAME} removed"
 
 # ══════════════════════════════════════════════════════════════════
 # Summary
