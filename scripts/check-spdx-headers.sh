@@ -63,7 +63,9 @@ insert_spdx() {
   local style
   style=$(comment_style_for "$file")
   local tmp
+  local mode
   tmp="$(mktemp "${TMPDIR:-/tmp}/nemoclaw-spdx.XXXXXX")"
+  mode="$(stat -c '%a' "$file" 2>/dev/null || stat -f '%Lp' "$file")"
   {
     IFS= read -r first || true
     if [[ "$first" == '#!'* ]]; then
@@ -79,7 +81,7 @@ insert_spdx() {
       fi
       cat
     fi
-  } <"$file" >"$tmp" && mv "$tmp" "$file"
+  } <"$file" >"$tmp" && chmod "$mode" "$tmp" && mv "$tmp" "$file"
 }
 
 failed=0
