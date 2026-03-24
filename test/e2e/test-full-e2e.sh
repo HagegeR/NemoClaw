@@ -5,7 +5,7 @@
 # Full E2E: install → onboard → verify inference (REAL services, no mocks)
 #
 # Proves the COMPLETE user journey including real inference against
-# the NVIDIA Endpoint API. Runs install.sh --non-interactive which handles
+# NVIDIA Endpoints. Runs install.sh --non-interactive which handles
 # Node.js, openshell, NemoClaw, and onboard setup automatically.
 #
 # Prerequisites:
@@ -17,7 +17,7 @@
 #   NEMOCLAW_NON_INTERACTIVE=1   — required (enables non-interactive install + onboard)
 #   NEMOCLAW_SANDBOX_NAME        — sandbox name (default: e2e-nightly)
 #   NEMOCLAW_RECREATE_SANDBOX=1  — recreate sandbox if it exists from a previous run
-#   NVIDIA_API_KEY               — required for NVIDIA Endpoint API inference
+#   NVIDIA_API_KEY               — required for NVIDIA Endpoints inference
 #
 # Usage:
 #   NEMOCLAW_NON_INTERACTIVE=1 NVIDIA_API_KEY=nvapi-... bash test/e2e/test-full-e2e.sh
@@ -154,11 +154,15 @@ wait $tail_pid 2>/dev/null || true
 
 # Source shell profile to pick up nvm/PATH changes from install.sh
 if [ -f "$HOME/.bashrc" ]; then
+  # shellcheck source=/dev/null
   source "$HOME/.bashrc" 2>/dev/null || true
 fi
 # Ensure nvm is loaded in current shell
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/nvm.sh"
+fi
 # Ensure ~/.local/bin is on PATH (openshell may be installed there in non-interactive mode)
 if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"
@@ -219,10 +223,10 @@ fi
 # 3c: Inference must be configured by onboard (no fallback — if onboard
 # failed to configure it, that's a bug we want to catch)
 if inf_check=$(openshell inference get 2>&1); then
-  if grep -qi "nvidia-nim" <<<"$inf_check"; then
+  if grep -qi "nvidia-prod" <<<"$inf_check"; then
     pass "Inference configured via onboard"
   else
-    fail "Inference not configured — onboard did not set up nvidia-nim provider"
+    fail "Inference not configured — onboard did not set up nvidia-prod provider"
   fi
 else
   fail "openshell inference get failed: ${inf_check:0:200}"
@@ -251,7 +255,7 @@ fi
 # ══════════════════════════════════════════════════════════════════
 section "Phase 4: Live inference"
 
-# ── Test 4a: Direct NVIDIA Endpoint API ──
+# ── Test 4a: Direct NVIDIA Endpoints ──
 info "[LIVE] Direct API test → integrate.api.nvidia.com..."
 api_response=$(curl -s --max-time 30 \
   -X POST https://integrate.api.nvidia.com/v1/chat/completions \
@@ -301,7 +305,7 @@ if [ -n "$sandbox_response" ]; then
   sandbox_content=$(echo "$sandbox_response" | parse_chat_content 2>/dev/null) || true
   if grep -qi "PONG" <<<"$sandbox_content"; then
     pass "[LIVE] Sandbox inference: model responded with PONG through sandbox"
-    info "Full path proven: user → sandbox → openshell gateway → NVIDIA Endpoint API → response"
+    info "Full path proven: user → sandbox → openshell gateway → NVIDIA Endpoints → response"
   else
     fail "[LIVE] Sandbox inference: expected PONG, got: ${sandbox_content:0:200}"
   fi
