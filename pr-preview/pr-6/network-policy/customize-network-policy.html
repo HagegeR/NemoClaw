@@ -50,7 +50,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=6dbb43f8"></script>
-    <script src="../_static/search-assets.bundle.js?v=00e3e057"></script>
+    <script src="../_static/search-assets.bundle.js?v=0ad6c85c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'network-policy/customize-network-policy';</script>
 
@@ -529,7 +529,7 @@ Apply a preset as-is or use it as a starting template for a custom policy.</p>
 </table>
 </div>
 <p>To apply a preset to a running sandbox, pass it as a policy file:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>openshell<span class="w"> </span>policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--policy<span class="w"> </span>nemoclaw-blueprint/policies/presets/pypi.yaml<span class="w"> </span>my-sandbox
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>openshell<span class="w"> </span>policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--policy<span class="w"> </span>nemoclaw-blueprint/policies/presets/pypi.yaml<span class="w"> </span>my-assistant
 </pre></div>
 </div>
 <p>To include a preset in the baseline, merge its entries into <code class="docutils literal notranslate"><span class="pre">openclaw-sandbox.yaml</span></code> and re-run <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>.</p>
