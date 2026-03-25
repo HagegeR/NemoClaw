@@ -114,7 +114,7 @@ Available presets:
 To apply a preset to a running sandbox, pass it as a policy file:
 
 ```console
-$ openshell policy set --policy nemoclaw-blueprint/policies/presets/pypi.yaml my-sandbox
+$ openshell policy set --policy nemoclaw-blueprint/policies/presets/pypi.yaml my-assistant
 ```
 
 To include a preset in the baseline, merge its entries into `openclaw-sandbox.yaml` and re-run `nemoclaw onboard`.
