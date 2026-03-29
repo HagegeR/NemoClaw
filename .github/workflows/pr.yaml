@@ -51,6 +51,9 @@ jobs:
   test-unit:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -71,6 +74,12 @@ jobs:
 
       - name: Run all unit tests with coverage
         run: npx vitest run --coverage
+
+      - name: Report Vitest coverage (PR comment + job summary)
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          vite-config-path: vitest.config.ts
 
       - name: Check coverage ratchet
         run: bash scripts/check-coverage-ratchet.sh
