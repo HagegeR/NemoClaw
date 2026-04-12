@@ -2794,6 +2794,7 @@ async function createSandbox(
 // eslint-disable-next-line complexity
 async function setupNim(gpu) {
   step(3, 8, "Configuring inference (NIM)");
+  hydrateNonInteractiveInferenceFromRegistry();
 
   let model = null;
   let provider = REMOTE_PROVIDER_CONFIG.build.providerName;
