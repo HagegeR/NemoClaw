@@ -1760,6 +1760,46 @@ function inferRemoteProviderKeyFromStoredName(storedName) {
   return map[storedName] || null;
 }
 
+/**
+ * When NEMOCLAW_SANDBOX_NAME is set and provider/model env vars are unset, fill them from
+ * ~/.nemoclaw/sandboxes.json so upgrade / CI can skip inference prompts.
+ * Falls back to the gateway key "nemoclaw" for legacy registry entries.
+ */
+function hydrateNonInteractiveInferenceFromRegistry() {
+  if (!isNonInteractive()) return;
+  const name = (process.env.NEMOCLAW_SANDBOX_NAME || "").trim();
+  if (!name) return;
+  let entry = registry.getSandbox(name);
+  if (!entry || !entry.model) {
+    entry = registry.getSandbox(GATEWAY_NAME);
+  }
+  if (!entry || !entry.model) return;
+
+  const providerKey = (process.env.NEMOCLAW_PROVIDER || "").trim();
+  const modelEnv = (process.env.NEMOCLAW_MODEL || "").trim();
+  if (!providerKey && entry.provider) {
+    let inferred = inferRemoteProviderKeyFromStoredName(entry.provider);
+    if (entry.provider === "vllm-local" && entry.nimContainer) {
+      inferred = "nim-local";
+    } else if (entry.provider === "vllm-local" && !entry.nimContainer) {
+      inferred = "vllm";
+    }
+    if (inferred) {
+      process.env.NEMOCLAW_PROVIDER = inferred;
+      note(`  [non-interactive] NEMOCLAW_PROVIDER (from registry) -> ${inferred}`);
+    }
+  }
+  if (!modelEnv && entry.model) {
+    process.env.NEMOCLAW_MODEL = entry.model;
+    note(`  [non-interactive] NEMOCLAW_MODEL (from registry) -> ${entry.model}`);
+  }
+  // CodeRabbit fix: hydrate endpoint URL for compatible endpoints
+  if (!process.env.NEMOCLAW_ENDPOINT_URL && entry.endpointUrl) {
+    process.env.NEMOCLAW_ENDPOINT_URL = entry.endpointUrl;
+    note(`  [non-interactive] NEMOCLAW_ENDPOINT_URL (from registry) -> ${entry.endpointUrl}`);
+  }
+}
+
 // ── Step 1: Preflight ────────────────────────────────────────────
 
 // eslint-disable-next-line complexity
