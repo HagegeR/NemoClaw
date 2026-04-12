@@ -2968,12 +2968,17 @@ async function setupNim(gpu) {
           }
         } else {
           if (isNonInteractive()) {
-            if (!process.env[credentialEnv]) {
+            const key = getCredential(credentialEnv);
+            if (!key) {
               console.error(
                 `  ${credentialEnv} is required for ${remoteConfig.label} in non-interactive mode.`,
               );
+              console.error(
+                "  Check ~/.nemoclaw/credentials.json or export the variable.",
+              );
               process.exit(1);
             }
+            process.env[credentialEnv] = key;
           } else {
             await ensureNamedCredential(
               credentialEnv,
