@@ -1743,6 +1743,23 @@ function getNonInteractiveModel(providerKey) {
   return model;
 }
 
+/** Map openshell provider name (stored in registry) to NEMOCLAW_PROVIDER / REMOTE_PROVIDER_CONFIG key. */
+function inferRemoteProviderKeyFromStoredName(storedName) {
+  if (!storedName) return null;
+  const map = {
+    "nvidia-prod": "build",
+    "nvidia-nim": "build",
+    "openai-api": "openai",
+    "anthropic-prod": "anthropic",
+    "compatible-endpoint": "custom",
+    "compatible-anthropic-endpoint": "anthropicCompatible",
+    "gemini-api": "gemini",
+    "ollama-local": "ollama",
+    "vllm-local": "vllm",
+  };
+  return map[storedName] || null;
+}
+
 // ── Step 1: Preflight ────────────────────────────────────────────
 
 // eslint-disable-next-line complexity
