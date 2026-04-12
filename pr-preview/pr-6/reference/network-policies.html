@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=2e2db37d" />
+    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=ef2c6a0b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
@@ -50,16 +50,23 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=6dbb43f8"></script>
-    <script src="../_static/search-assets.bundle.js?v=0ad6c85c"></script>
+    <script src="../_static/search-assets.bundle.js?v=099b119e"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/network-policies';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
 
     <link rel="canonical" href="https://docs.nvidia.com/nemoclaw/latest/reference/network-policies.html" />
     <link rel="icon" href="../_static/favicon.png"/>
 
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
-    <link rel="prev" title="Inference Profiles" href="inference-profiles.html" />
+    <link rel="prev" title="Commands" href="commands.html" />
 
 
 
@@ -110,6 +117,9 @@
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">&#x1F514; NVIDIA NemoClaw is <strong>alpha software</strong>. APIs and behavior may change without notice. Do not use in production.</div>
+</aside>
 
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
@@ -149,6 +159,32 @@
   </div>
   
   <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
     
     
     <div class="navbar-header-items__end">
@@ -264,6 +300,35 @@
   <div class="sidebar-header-items sidebar-primary__section">
     
     
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+          
+        
+      </div>
+    
     
     
       <div class="sidebar-header-items__end">
@@ -316,13 +381,11 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Table of Contents">
   <p class="bd-links__title" role="heading" aria-level="1">Table of Contents</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../about/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about/how-it-works.html">How It Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/ecosystem.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about/release-notes.html">Release Notes</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
@@ -331,6 +394,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../inference/inference-options.html">Inference Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/use-local-inference.html">Use Local Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../inference/switch-inference-providers.html">Switch Inference Providers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Network Policy</span></p>
@@ -338,10 +403,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../network-policy/approve-network-requests.html">Approve or Deny Network Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../network-policy/customize-network-policy.html">Customize the Network Policy</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Security</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../security/best-practices.html">Security Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/credential-storage.html">Credential Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/openclaw-controls.html">OpenClaw Controls</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../deployment/deploy-to-remote-gpu.html">Deploy to a Remote GPU Instance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up the Telegram Bridge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
 <ul class="nav bd-sidenav">
@@ -356,12 +428,13 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inference-profiles.html">Inference Profiles</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Network Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../resources/agent-skills.html">Agent Skills</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md">Report Vulnerabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources/license.html">License</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://discord.gg/XFpfPv9Uvx">Discord</a></li>
 </ul>
@@ -469,31 +542,21 @@ Landlock LSM enforcement applies on a best-effort basis.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">claude_code</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">api.anthropic.com:443</span></code>, <code class="docutils literal notranslate"><span class="pre">statsig.anthropic.com:443</span></code>, <code class="docutils literal notranslate"><span class="pre">sentry.io:443</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/claude</span></code></p></td>
-<td><p>All methods</p></td>
+<td><p>POST to inference paths on <code class="docutils literal notranslate"><span class="pre">api.anthropic.com</span></code>, POST on <code class="docutils literal notranslate"><span class="pre">statsig.anthropic.com</span></code>, GET only on <code class="docutils literal notranslate"><span class="pre">sentry.io</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nvidia</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">integrate.api.nvidia.com:443</span></code>, <code class="docutils literal notranslate"><span class="pre">inference-api.nvidia.com:443</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/claude</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code></p></td>
-<td><p>All methods</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">github</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">github.com:443</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/gh</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/bin/git</span></code></p></td>
-<td><p>All methods, all paths</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">github_rest_api</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">api.github.com:443</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/gh</span></code></p></td>
-<td><p>GET, POST, PATCH, PUT, DELETE</p></td>
+<td><p>POST to inference and embedding paths, GET to model listings</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clawhub</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">clawhub.com:443</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">clawhub.ai:443</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/node</span></code></p></td>
 <td><p>GET, POST</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">openclaw_api</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">openclaw.ai:443</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/node</span></code></p></td>
 <td><p>GET, POST</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">openclaw_docs</span></code></p></td>
@@ -503,18 +566,19 @@ Landlock LSM enforcement applies on a best-effort basis.</p>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">npm_registry</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">registry.npmjs.org:443</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/npm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/usr/local/bin/openclaw</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/npm</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/node</span></code></p></td>
 <td><p>GET only</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">telegram</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">api.telegram.org:443</span></code></p></td>
-<td><p>Any binary</p></td>
-<td><p>GET, POST on <code class="docutils literal notranslate"><span class="pre">/bot*/**</span></code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>All endpoints use TLS termination and are enforced at port 443.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GitHub access (<code class="docutils literal notranslate"><span class="pre">github.com</span></code>, <code class="docutils literal notranslate"><span class="pre">api.github.com</span></code>) is not included in the baseline policy.
+Apply the <code class="docutils literal notranslate"><span class="pre">github</span></code> preset during onboarding if your agent needs GitHub access.
+See <a class="reference internal" href="../network-policy/customize-network-policy.html"><span class="std std-doc">Customize the Network Policy</span></a>.</p>
+</div>
 </section>
 <section id="inference">
 <h3>Inference<a class="headerlink" href="#inference" title="Link to this heading">#</a></h3>
@@ -568,12 +632,12 @@ providers are reached through the OpenShell gateway, not by direct sandbox egres
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inference-profiles.html"
+       href="commands.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Inference Profiles</p>
+        <p class="prev-next-title">Commands</p>
       </div>
     </a>
     <a class="right-next"
@@ -701,7 +765,7 @@ providers are reached through the OpenShell gateway, not by direct sandbox egres
 
   <p class="copyright">
     
-      Copyright © 2025-2026, NVIDIA Corporation.
+      Copyright © 2026, NVIDIA Corporation.
       <br/>
     
   </p>

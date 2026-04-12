@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=2e2db37d" />
+    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=ef2c6a0b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
@@ -50,16 +50,23 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=6dbb43f8"></script>
-    <script src="../_static/search-assets.bundle.js?v=0ad6c85c"></script>
+    <script src="../_static/search-assets.bundle.js?v=099b119e"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'inference/switch-inference-providers';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
 
     <link rel="canonical" href="https://docs.nvidia.com/nemoclaw/latest/inference/switch-inference-providers.html" />
     <link rel="icon" href="../_static/favicon.png"/>
 
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Approve or Deny Agent Network Requests" href="../network-policy/approve-network-requests.html" />
-    <link rel="prev" title="Quickstart" href="../get-started/quickstart.html" />
+    <link rel="prev" title="Use a Local Inference Server" href="use-local-inference.html" />
 
 
 
@@ -110,6 +117,9 @@
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">&#x1F514; NVIDIA NemoClaw is <strong>alpha software</strong>. APIs and behavior may change without notice. Do not use in production.</div>
+</aside>
 
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
@@ -149,6 +159,32 @@
   </div>
   
   <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
     
     
     <div class="navbar-header-items__end">
@@ -264,6 +300,35 @@
   <div class="sidebar-header-items sidebar-primary__section">
     
     
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+          
+        
+      </div>
+    
     
     
       <div class="sidebar-header-items__end">
@@ -316,13 +381,11 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Table of Contents">
   <p class="bd-links__title" role="heading" aria-level="1">Table of Contents</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../about/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about/how-it-works.html">How It Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/ecosystem.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about/release-notes.html">Release Notes</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
@@ -331,6 +394,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="inference-options.html">Inference Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="use-local-inference.html">Use Local Inference</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Switch Inference Providers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Network Policy</span></p>
@@ -338,10 +403,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../network-policy/approve-network-requests.html">Approve or Deny Network Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../network-policy/customize-network-policy.html">Customize the Network Policy</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Security</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../security/best-practices.html">Security Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/credential-storage.html">Credential Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/openclaw-controls.html">OpenClaw Controls</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../deployment/deploy-to-remote-gpu.html">Deploy to a Remote GPU Instance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up the Telegram Bridge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
 <ul class="nav bd-sidenav">
@@ -356,12 +428,13 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../reference/architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/commands.html">Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/inference-profiles.html">Inference Profiles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/network-policies.html">Network Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../resources/agent-skills.html">Agent Skills</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md">Report Vulnerabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources/license.html">License</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://discord.gg/XFpfPv9Uvx">Discord</a></li>
 </ul>
@@ -470,6 +543,25 @@ Use the provider and model that match the upstream you want to use.</p>
 <p>If the provider itself needs to change, rerun <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>.</p>
 </section>
 </section>
+<section id="cross-provider-switching">
+<h2>Cross-Provider Switching<a class="headerlink" href="#cross-provider-switching" title="Link to this heading">#</a></h2>
+<p>Switching to a different provider family (for example, from NVIDIA Endpoints to Anthropic) requires updating both the gateway route and the sandbox config.</p>
+<p>Set the gateway route on the host:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>openshell<span class="w"> </span>inference<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--provider<span class="w"> </span>anthropic-prod<span class="w"> </span>--model<span class="w"> </span>claude-sonnet-4-6<span class="w"> </span>--no-verify
+</pre></div>
+</div>
+<p>Then set the override env vars and recreate the sandbox so they take effect at startup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEMOCLAW_MODEL_OVERRIDE</span><span class="o">=</span><span class="s2">&quot;anthropic/claude-sonnet-4-6&quot;</span>
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">NEMOCLAW_INFERENCE_API_OVERRIDE</span><span class="o">=</span><span class="s2">&quot;anthropic-messages&quot;</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard<span class="w"> </span>--resume<span class="w"> </span>--recreate-sandbox
+</pre></div>
+</div>
+<p>The entrypoint patches <code class="docutils literal notranslate"><span class="pre">openclaw.json</span></code> at container startup with the override values.
+No image rebuild is needed.
+Remove the env vars and recreate the sandbox to revert to the original model.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NEMOCLAW_INFERENCE_API_OVERRIDE</span></code> accepts <code class="docutils literal notranslate"><span class="pre">openai-completions</span></code> (for NVIDIA, OpenAI, Gemini, compatible endpoints) or <code class="docutils literal notranslate"><span class="pre">anthropic-messages</span></code> (for Anthropic and Anthropic-compatible endpoints).
+This variable is only needed when switching between provider families.</p>
+</section>
 <section id="verify-the-active-model">
 <h2>Verify the Active Model<a class="headerlink" href="#verify-the-active-model" title="Link to this heading">#</a></h2>
 <p>Run the status command to confirm the change:</p>
@@ -487,13 +579,15 @@ Use the provider and model that match the upstream you want to use.</p>
 <ul class="simple">
 <li><p>The host keeps provider credentials.</p></li>
 <li><p>The sandbox continues to use <code class="docutils literal notranslate"><span class="pre">inference.local</span></code>.</p></li>
-<li><p>Runtime switching changes the OpenShell route. It does not rewrite your stored credentials.</p></li>
+<li><p>Same-provider model switches take effect immediately via the gateway route alone.</p></li>
+<li><p>Cross-provider switches also require <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_MODEL_OVERRIDE</span></code> (and <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_INFERENCE_API_OVERRIDE</span></code>) plus a sandbox recreate so the entrypoint patches the config at startup.</p></li>
+<li><p>Overrides are applied at container startup. Changing or removing env vars requires a sandbox recreate to take effect.</p></li>
 </ul>
 </section>
 <section id="related-topics">
 <h2>Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../reference/inference-profiles.html"><span class="std std-doc">Inference Profiles</span></a> for full profile configuration details.</p></li>
+<li><p><a class="reference internal" href="inference-options.html"><span class="std std-doc">Inference Options</span></a> for the full list of providers available during onboarding.</p></li>
 </ul>
 </section>
 </section>
@@ -509,12 +603,12 @@ Use the provider and model that match the upstream you want to use.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../get-started/quickstart.html"
+       href="use-local-inference.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Quickstart</p>
+        <p class="prev-next-title">Use a Local Inference Server</p>
       </div>
     </a>
     <a class="right-next"
@@ -556,6 +650,7 @@ Use the provider and model that match the upstream you want to use.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compatible-endpoints">Compatible Endpoints</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-provider-switching">Cross-Provider Switching</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-active-model">Verify the Active Model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-topics">Related Topics</a></li>
@@ -642,7 +737,7 @@ Use the provider and model that match the upstream you want to use.</p>
 
   <p class="copyright">
     
-      Copyright © 2025-2026, NVIDIA Corporation.
+      Copyright © 2026, NVIDIA Corporation.
       <br/>
     
   </p>

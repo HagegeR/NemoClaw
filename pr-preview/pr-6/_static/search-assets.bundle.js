@@ -260,6 +260,7 @@ class DocumentLoader {
             title: this.sanitizeText(doc.title, 200),
             // Add description as separate indexed field (for improved search relevance)
             description: this.sanitizeText(doc.description, 300),
+            description_agent: this.sanitizeText(doc.description_agent, 300),
             content: this.sanitizeText(doc.content, 5000),
             summary: this.sanitizeText(doc.summary, 500),
             headings: this.sanitizeHeadings(doc.headings),
@@ -585,7 +586,8 @@ class SearchEngine {
 
             // Primary fields - highest relevance
             this.field('title', { boost: 10 });           // Title matches most important
-            this.field('description', { boost: 8 });      // Frontmatter description (hand-crafted)
+            this.field('description', { boost: 8 });      // Frontmatter description.main (hand-crafted)
+            this.field('description_agent', { boost: 6 }); // description.agent for agent-oriented phrasing
 
             // Secondary fields - structural relevance
             this.field('keywords', { boost: 7 });         // Explicit keywords
@@ -612,7 +614,10 @@ class SearchEngine {
                     this.add({
                         id: doc.id,
                         title: doc.title || '',
-                        description: doc.description || '',  // NEW: separate indexed field
+                        description: doc.description || '',
+                        description_agent: doc.description_agent && doc.description_agent !== doc.description
+                            ? doc.description_agent
+                            : '',
                         content: (doc.content || '').substring(0, 5000), // Limit content length
                         summary: doc.summary || '',
                         headings: self.extractHeadingsText(doc.headings),
@@ -1038,19 +1043,21 @@ class SearchEngine {
      * Calculate boost for description matches
      */
     calculateDescriptionBoost(doc, queryTerms) {
-        if (!doc.description) return 0;
+        const texts = [...new Set(
+            [doc.description, doc.description_agent].filter(Boolean)
+        )];
+        if (texts.length === 0) return 0;
 
-        const descLower = doc.description.toLowerCase();
         let boost = 0;
-
-        // Check if query terms appear early in description
-        queryTerms.forEach(term => {
-            const pos = descLower.indexOf(term);
-            if (pos !== -1) {
-                // Boost more if term appears early
-                boost += pos < 50 ? 1 : 0.5;
-            }
-        });
+        for (const text of texts) {
+            const descLower = text.toLowerCase();
+            queryTerms.forEach(term => {
+                const pos = descLower.indexOf(term);
+                if (pos !== -1) {
+                    boost += pos < 50 ? 1 : 0.5;
+                }
+            });
+        }
 
         return boost;
     }

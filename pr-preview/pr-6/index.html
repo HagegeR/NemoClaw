@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/enhanced-search.css?v=2e2db37d" />
+    <link rel="stylesheet" type="text/css" href="_static/enhanced-search.css?v=ef2c6a0b" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
@@ -50,9 +50,16 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=6dbb43f8"></script>
-    <script src="_static/search-assets.bundle.js?v=0ad6c85c"></script>
+    <script src="_static/search-assets.bundle.js?v=099b119e"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
 
     <link rel="canonical" href="https://docs.nvidia.com/nemoclaw/latest/index.html" />
     <link rel="icon" href="_static/favicon.png"/>
@@ -109,6 +116,9 @@
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">&#x1F514; NVIDIA NemoClaw is <strong>alpha software</strong>. APIs and behavior may change without notice. Do not use in production.</div>
+</aside>
 
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
@@ -148,6 +158,32 @@
   </div>
   
   <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
     
     
     <div class="navbar-header-items__end">
@@ -263,6 +299,35 @@
   <div class="sidebar-header-items sidebar-primary__section">
     
     
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+          
+        
+      </div>
+    
     
     
       <div class="sidebar-header-items__end">
@@ -315,13 +380,11 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Table of Contents">
   <p class="bd-links__title" role="heading" aria-level="1">Table of Contents</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Home</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="about/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about/how-it-works.html">How It Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about/ecosystem.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about/release-notes.html">Release Notes</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
@@ -330,6 +393,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="inference/inference-options.html">Inference Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference/use-local-inference.html">Use Local Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inference/switch-inference-providers.html">Switch Inference Providers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Network Policy</span></p>
@@ -337,10 +402,17 @@
 <li class="toctree-l1"><a class="reference internal" href="network-policy/approve-network-requests.html">Approve or Deny Network Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="network-policy/customize-network-policy.html">Customize the Network Policy</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Security</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="security/best-practices.html">Security Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security/credential-storage.html">Credential Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security/openclaw-controls.html">OpenClaw Controls</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="deployment/deploy-to-remote-gpu.html">Deploy to a Remote GPU Instance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="deployment/set-up-telegram-bridge.html">Set Up the Telegram Bridge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
 <ul class="nav bd-sidenav">
@@ -355,12 +427,13 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="reference/architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/commands.html">Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/inference-profiles.html">Inference Profiles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/network-policies.html">Network Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="resources/agent-skills.html">Agent Skills</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md">Report Vulnerabilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources/license.html">License</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://discord.gg/XFpfPv9Uvx">Discord</a></li>
 </ul>
@@ -398,16 +471,10 @@
 <h1>NVIDIA NemoClaw<a class="headerlink" href="#nvidia-nemoclaw" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/LICENSE" rel="noreferer noopener" target="_blank"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue" /></a>
 <a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md" rel="noreferer noopener" target="_blank"><img alt="Security Policy" src="https://img.shields.io/badge/Security-Report%20a%20Vulnerability-red" /></a>
-<a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/docs/about/release-notes.md" rel="noreferer noopener" target="_blank"><img alt="Project Status" src="https://img.shields.io/badge/status-alpha-orange" /></a></p>
-<!-- markdownlint-disable MD041 -->
-<div class="admonition-alpha-software admonition">
-<p class="admonition-title">Alpha software</p>
-<p>NemoClaw is in alpha, available as an early preview since March 16, 2026.
-APIs, configuration schemas, and runtime behavior are subject to breaking changes between releases.
-Do not use this software in production environments.
-File issues and feedback through the GitHub repository as the project continues to stabilize.</p>
-</div>
+<a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/docs/about/release-notes.md" rel="noreferer noopener" target="_blank"><img alt="Project Status" src="https://img.shields.io/badge/status-alpha-orange" /></a>
+<a class="reference external" href="https://discord.gg/XFpfPv9Uvx" rel="noreferer noopener" target="_blank"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join-7289da" /></a></p>
 <p>NVIDIA NemoClaw is an open source reference stack that simplifies running <a class="reference external" href="https://openclaw.ai" rel="noreferer noopener" target="_blank">OpenClaw</a> always-on assistants more safely.
+NemoClaw provides onboarding, lifecycle management, and management of OpenClaw within OpenShell containers.
 It installs the <a class="reference external" href="https://github.com/NVIDIA/OpenShell" rel="noreferer noopener" target="_blank">NVIDIA OpenShell</a> runtime, part of NVIDIA Agent Toolkit, an environment designed for executing claws with additional security, and open source models like <a class="reference external" href="https://build.nvidia.com" rel="noreferer noopener" target="_blank">NVIDIA Nemotron</a>.</p>
 <section id="get-started">
 <h2>Get Started<a class="headerlink" href="#get-started" title="Link to this heading">#</a></h2>
@@ -471,12 +538,24 @@ You can also clone the <a class="reference external" href="https://github.com/NV
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
 About NemoClaw</div>
-<p class="sd-card-text">Learn what NemoClaw does and how it integrates OpenClaw with OpenShell.</p>
+<p class="sd-card-text">What NemoClaw is: capabilities, benefits, and typical uses.</p>
 </div>
 <div class="sd-card-footer docutils">
 <p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Concept</span></p>
 </div>
 <a class="sd-stretched-link sd-hide-link-text reference internal" href="about/overview.html"><span class="doc">Overview</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Ecosystem</div>
+<p class="sd-card-text">How OpenClaw, OpenShell, and NemoClaw form a stack and when to use NemoClaw versus OpenShell alone.</p>
+</div>
+<div class="sd-card-footer docutils">
+<p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Concept</span></p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="about/ecosystem.html"><span class="doc">Ecosystem</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -506,20 +585,20 @@ Commands</div>
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-Inference Profiles</div>
-<p class="sd-card-text">NVIDIA endpoint inference configuration and available models.</p>
+Inference Options</div>
+<p class="sd-card-text">Providers available during onboarding and how inference routing works.</p>
 </div>
 <div class="sd-card-footer docutils">
-<p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Reference</span></p>
+<p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Concept</span></p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference internal" href="reference/inference-profiles.html"><span class="doc">Inference Profiles</span></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="inference/inference-options.html"><span class="doc">Inference Options</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
 How It Works</div>
-<p class="sd-card-text">High-level overview of the plugin, blueprint, sandbox, and inference routing.</p>
+<p class="sd-card-text">How NemoClaw runs: plugin, blueprint, OpenShell orchestration, routing, and policy layers.</p>
 </div>
 <div class="sd-card-footer docutils">
 <p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Concept</span></p>
@@ -566,6 +645,18 @@ Workspace Files</div>
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
+Security Best Practices</div>
+<p class="sd-card-text">Controls reference, risk framework, and posture profiles for sandbox security.</p>
+</div>
+<div class="sd-card-footer docutils">
+<p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Concept</span></p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="security/best-practices.html"><span class="doc">Security Best Practices</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
 How-To Guides</div>
 <p class="sd-card-text">Task-oriented guides for inference, deployment, and policy management.</p>
 </div>
@@ -574,7 +665,24 @@ How-To Guides</div>
 </div>
 <a class="sd-stretched-link sd-hide-link-text reference internal" href="inference/switch-inference-providers.html"><span class="doc">Switch Inference Models at Runtime</span></a></div>
 </div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Agent Skills</div>
+<p class="sd-card-text">Use AI coding assistants with NemoClaw’s built-in agent skills for guided setup and operation.</p>
 </div>
+<div class="sd-card-footer docutils">
+<p class="sd-card-text"><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Resource</span></p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="resources/agent-skills.html"><span class="doc">NemoClaw Agent Skills for AI Coding Assistants</span></a></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="warning admonition">
+<p class="admonition-title">Notice and Disclaimer</p>
+<p>This software automatically retrieves, accesses or interacts with external materials. Those retrieved materials are not distributed with this software and are governed solely by separate terms, conditions and licenses. You are solely responsible for finding, reviewing and complying with all applicable terms, conditions, and licenses, and for verifying the security, integrity and suitability of any retrieved materials for your specific use case. This software is provided “AS IS”, without warranty of any kind. The author makes no representations or warranties regarding any retrieved materials, and assumes no liability for any losses, damages, liabilities or legal consequences from your use or inability to use this software or any retrieved materials. Use this software and the retrieved materials at your own risk.</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>
@@ -726,7 +834,7 @@ How-To Guides</div>
 
   <p class="copyright">
     
-      Copyright © 2025-2026, NVIDIA Corporation.
+      Copyright © 2026, NVIDIA Corporation.
       <br/>
     
   </p>
