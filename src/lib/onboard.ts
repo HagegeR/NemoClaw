@@ -3551,7 +3551,6 @@ async function setupInference(
   }
 
   verifyInferenceRoute(provider, model);
-  registry.updateSandbox(sandboxName, { model, provider });
   console.log(`  ✓ Inference route set: ${provider} / ${model}`);
   return { ok: true };
 }
@@ -4629,8 +4628,18 @@ async function onboard(opts = {}) {
         isInferenceRouteReady(provider, model);
       if (resumeInference) {
         skippedStepMessage("inference", `${provider} / ${model}`);
-        if (nimContainer) {
-          registry.updateSandbox(sandboxName, { nimContainer });
+        const resumeUpdate = {};
+        if (nimContainer) resumeUpdate.nimContainer = nimContainer;
+        if (model) resumeUpdate.model = model;
+        if (provider) resumeUpdate.provider = provider;
+        if (
+          endpointUrl &&
+          (provider === "compatible-endpoint" || provider === "compatible-anthropic-endpoint")
+        ) {
+          resumeUpdate.endpointUrl = endpointUrl;
+        }
+        if (Object.keys(resumeUpdate).length > 0) {
+          registry.updateSandbox(sandboxName, resumeUpdate);
         }
         onboardSession.markStepComplete("inference", {
           sandboxName,
@@ -4654,9 +4663,17 @@ async function onboard(opts = {}) {
         forceProviderSelection = true;
         continue;
       }
+      const sandboxUpdate = { model, provider };
       if (nimContainer) {
-        registry.updateSandbox(sandboxName, { nimContainer });
+        sandboxUpdate.nimContainer = nimContainer;
       }
+      if (
+        endpointUrl &&
+        (provider === "compatible-endpoint" || provider === "compatible-anthropic-endpoint")
+      ) {
+        sandboxUpdate.endpointUrl = endpointUrl;
+      }
+      registry.updateSandbox(sandboxName, sandboxUpdate);
       onboardSession.markStepComplete("inference", { sandboxName, provider, model, nimContainer });
       break;
     }
