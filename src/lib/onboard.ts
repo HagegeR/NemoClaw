@@ -2937,13 +2937,18 @@ async function setupNim(gpu) {
 
         if (selected.key === "build") {
           if (isNonInteractive()) {
-            if (!process.env.NVIDIA_API_KEY) {
+            const key = getCredential("NVIDIA_API_KEY") || process.env.NVIDIA_API_KEY;
+            if (!key) {
               console.error(
                 "  NVIDIA_API_KEY is required for NVIDIA Endpoints in non-interactive mode.",
               );
+              console.error(
+                "  Check ~/.nemoclaw/credentials.json or export NVIDIA_API_KEY.",
+              );
               process.exit(1);
             }
-            const keyError = validateNvidiaApiKeyValue(process.env.NVIDIA_API_KEY);
+            process.env.NVIDIA_API_KEY = key;
+            const keyError = validateNvidiaApiKeyValue(key);
             if (keyError) {
               console.error(keyError);
               console.error(`  Get a key from ${REMOTE_PROVIDER_CONFIG.build.helpUrl}`);
