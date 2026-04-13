@@ -567,6 +567,22 @@ They persist across sandbox restarts but are <strong>permanently deleted</strong
 </div>
 </section>
 </section>
+<section id="upgrade-workflow-image-rebuild-onboard">
+<h2>Upgrade workflow (image rebuild / onboard)<a class="headerlink" href="#upgrade-workflow-image-rebuild-onboard" title="Link to this heading">#</a></h2>
+<p>Before you change the sandbox image (for example after editing <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>) or run <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>, back up. Optional files such as <code class="docutils literal notranslate"><span class="pre">MEMORY.md</span></code> or <code class="docutils literal notranslate"><span class="pre">memory/</span></code> may not exist yet; the backup script skips them with a warning.</p>
+<p>Use the upgrade helper to run workspace backup, optionally snapshot all of <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw-data/</span></code>, and optionally run <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/upgrade-sandbox.sh<span class="w"> </span>my-assistant
+<span class="gp">$ </span>./scripts/upgrade-sandbox.sh<span class="w"> </span>--full-data<span class="w"> </span>my-assistant
+<span class="gp">$ </span>./scripts/upgrade-sandbox.sh<span class="w"> </span>--run-onboard<span class="w"> </span>--yes<span class="w"> </span>my-assistant
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--full-data</span></code> downloads the full OpenClaw state tree (larger; includes sessions and agents beyond the Markdown workspace).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run-onboard</span></code> runs <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> from the repo root (or <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_REPO_ROOT</span></code>). After a successful onboard, the script <strong>automatically</strong> runs <code class="docutils literal notranslate"><span class="pre">backup-workspace.sh</span> <span class="pre">restore</span></code> for the backup timestamp created at the start (so you do not need to run restore by hand). Use <code class="docutils literal notranslate"><span class="pre">--no-restore</span></code> to skip that step if you want a fresh workspace after the rebuild.</p></li>
+<li><p>Without <code class="docutils literal notranslate"><span class="pre">--run-onboard</span></code>, the script only backs up and prints suggested next commands.</p></li>
+</ul>
+<p>See <code class="docutils literal notranslate"><span class="pre">scripts/upgrade-sandbox.sh</span> <span class="pre">--help</span></code> for options and environment variables.</p>
+</section>
 <section id="verifying-a-backup">
 <h2>Verifying a Backup<a class="headerlink" href="#verifying-a-backup" title="Link to this heading">#</a></h2>
 <p>List backed-up files to confirm completeness:</p>
@@ -656,6 +672,7 @@ They persist across sandbox restarts but are <strong>permanently deleted</strong
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restore">Restore</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-workflow-image-rebuild-onboard">Upgrade workflow (image rebuild / onboard)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-a-backup">Verifying a Backup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-files-inside-the-sandbox">Inspecting Files Inside the Sandbox</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
