@@ -12,6 +12,7 @@ export interface SandboxEntry {
   model?: string | null;
   nimContainer?: string | null;
   provider?: string | null;
+  endpointUrl?: string | null;
   gpuEnabled?: boolean;
   policies?: string[];
   agent?: string | null;
