@@ -88,16 +88,19 @@ repos:
         priority: 4
 
   # ── Priority 5: formatters ────────────────────────────────────────────────
-  - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.12.0-2
+  - repo: local
     hooks:
       - id: shfmt
+        name: shfmt (system)
+        entry: shfmt
+        language: system
         args:
           - -w
           - -i
           - "2"
           - -ci
           - -bn
+        types: [shell]
         priority: 5
 
   - repo: local
@@ -264,7 +267,7 @@ repos:
 
       - id: test-plugin
         name: Test (plugin)
-        entry: bash -c 'npx vitest run --project plugin --coverage --coverage.reporter=text --coverage.reporter=json-summary --coverage.reportsDirectory=coverage/plugin --coverage.include="nemoclaw/src/**/*.ts" --coverage.exclude="**/*.test.ts" && npx tsx scripts/check-coverage-ratchet.ts coverage/plugin/coverage-summary.json ci/coverage-threshold-plugin.json "Plugin coverage"'
+        entry: bash -c 'root="$(git rev-parse --show-toplevel)" && cd "$root" && NODE_PATH="$root/nemoclaw/node_modules" nemoclaw/node_modules/.bin/vitest run --project plugin'
         language: system
         pass_filenames: false
         files: ^nemoclaw/

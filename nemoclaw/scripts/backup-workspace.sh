@@ -134,7 +134,7 @@ do_restore() {
       if openshell sandbox upload "$sandbox" "${src}/${f}" "${WORKSPACE_PATH}/"; then
         count=$((count + 1))
       else
-        warn "Failed to restore ${f}"
+        fail "Failed to restore core file ${f} — aborting to prevent incomplete workspace."
       fi
     fi
   done
