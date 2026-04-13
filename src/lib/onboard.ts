@@ -4639,7 +4639,8 @@ async function onboard(opts = {}) {
           resumeUpdate.endpointUrl = endpointUrl;
         }
         if (Object.keys(resumeUpdate).length > 0) {
-          registry.updateSandbox(sandboxName, resumeUpdate);
+          const updateKey = sandboxName || GATEWAY_NAME;
+          registry.updateSandbox(updateKey, resumeUpdate);
         }
         onboardSession.markStepComplete("inference", {
           sandboxName,
