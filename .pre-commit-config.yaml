@@ -88,19 +88,16 @@ repos:
         priority: 4
 
   # ── Priority 5: formatters ────────────────────────────────────────────────
-  - repo: local
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
     hooks:
       - id: shfmt
-        name: shfmt (system)
-        entry: shfmt
-        language: system
         args:
           - -w
           - -i
           - "2"
           - -ci
           - -bn
-        types: [shell]
         priority: 5
 
   - repo: local
@@ -259,7 +256,7 @@ repos:
     hooks:
       - id: test-cli
         name: Test (CLI)
-        entry: bash -c 'root="$(git rev-parse --show-toplevel)" && if [ ! -f "$root/node_modules/.bin/vitest" ]; then echo "[warn] root vitest not installed — skipping CLI tests"; exit 0; fi && npm run build:cli && node_modules/.bin/vitest run --project cli'
+        entry: bash -c 'npm run build:cli && npx vitest run --project cli --coverage --coverage.reporter=text --coverage.reporter=json-summary --coverage.reportsDirectory=coverage/cli --coverage.include="bin/**/*.js" --coverage.include="dist/lib/**/*.js" --coverage.exclude="test/**/*.js" --coverage.exclude="test/**/*.ts" && npx tsx scripts/check-coverage-ratchet.ts coverage/cli/coverage-summary.json ci/coverage-threshold-cli.json "CLI coverage"'
         language: system
         pass_filenames: false
         files: ^(bin/|src/|test/)
@@ -267,7 +264,7 @@ repos:
 
       - id: test-plugin
         name: Test (plugin)
-        entry: bash -c 'root="$(git rev-parse --show-toplevel)" && cd "$root" && NODE_PATH="$root/nemoclaw/node_modules" nemoclaw/node_modules/.bin/vitest run --project plugin'
+        entry: bash -c 'npx vitest run --project plugin --coverage --coverage.reporter=text --coverage.reporter=json-summary --coverage.reportsDirectory=coverage/plugin --coverage.include="nemoclaw/src/**/*.ts" --coverage.exclude="**/*.test.ts" && npx tsx scripts/check-coverage-ratchet.ts coverage/plugin/coverage-summary.json ci/coverage-threshold-plugin.json "Plugin coverage"'
         language: system
         pass_filenames: false
         files: ^nemoclaw/
