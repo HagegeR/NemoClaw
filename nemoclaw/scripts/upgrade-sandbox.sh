@@ -128,7 +128,14 @@ if [ "$RUN_ONBOARD" -eq 1 ]; then
   export NEMOCLAW_NON_INTERACTIVE="${NEMOCLAW_NON_INTERACTIVE:-1}"
   export NEMOCLAW_SANDBOX_NAME="$SANDBOX"
   export NEMOCLAW_RECREATE_SANDBOX="${NEMOCLAW_RECREATE_SANDBOX:-1}"
-  (cd "$ROOT" && exec nemoclaw onboard)
+  ONBOARD_RC=0
+  (cd "$ROOT" && nemoclaw onboard) || ONBOARD_RC=$?
+  if [ "$ONBOARD_RC" -ne 0 ]; then
+    warn "nemoclaw onboard exited with code ${ONBOARD_RC}."
+    info "Your workspace backup is safe at: ${DEST}/"
+    info "To restore manually: ./scripts/backup-workspace.sh restore ${SANDBOX} ${TS}"
+    exit "$ONBOARD_RC"
+  fi
   if [ "$NO_RESTORE" -eq 1 ]; then
     info "Skipping automatic workspace restore (--no-restore)."
     info "To restore manually: ./scripts/backup-workspace.sh restore ${SANDBOX} ${TS}"
