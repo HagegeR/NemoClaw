@@ -42,16 +42,20 @@ EOF
   exit 1
 }
 
-# Download from sandbox. Optional paths suppress stderr because openshell/tar
-# emit multi-line errors when a file or directory does not exist yet.
+# Exit codes: 0 = success, 2 = not found (quiet mode only), 1 = fatal error.
 sandbox_download() {
   local sandbox="$1" remote="$2" dest="$3"
   local quiet="${4:-0}"
+  local rc=0
   if [[ "$quiet" == "1" ]]; then
-    openshell sandbox download "$sandbox" "$remote" "$dest" 2>/dev/null
+    openshell sandbox download "$sandbox" "$remote" "$dest" 2>/dev/null || rc=$?
   else
-    openshell sandbox download "$sandbox" "$remote" "$dest"
+    openshell sandbox download "$sandbox" "$remote" "$dest" || rc=$?
   fi
+  if [[ "$rc" -ne 0 && "$quiet" == "1" ]]; then
+    return 2 # treat as not-found when quiet
+  fi
+  return "$rc"
 }
 
 do_backup() {
@@ -65,6 +69,8 @@ do_backup() {
     || fail "Failed to set secure permissions on ${HOME}/.nemoclaw — check directory ownership."
   mkdir -p "$dest"
   chmod 0700 "$dest"
+  # Write manifest so restores can verify sandbox origin.
+  echo "$sandbox" >"${dest}/.sandbox-name"
 
   info "Backing up workspace from sandbox '${sandbox}'..."
 
@@ -72,26 +78,36 @@ do_backup() {
   local f d
 
   for f in "${FILES_CORE[@]}"; do
-    if sandbox_download "$sandbox" "${WORKSPACE_PATH}/${f}" "${dest}/" 0; then
+    local dl_rc=0
+    sandbox_download "$sandbox" "${WORKSPACE_PATH}/${f}" "${dest}/" 0 || dl_rc=$?
+    if [[ "$dl_rc" -eq 0 ]]; then
       count=$((count + 1))
     else
-      warn "Skipped ${f} (not found or download failed)"
+      fail "Failed to download core file ${f} (exit code ${dl_rc}) — aborting backup."
     fi
   done
 
   for f in "${FILES_OPTIONAL[@]}"; do
-    if sandbox_download "$sandbox" "${WORKSPACE_PATH}/${f}" "${dest}/" 1; then
+    local dl_rc=0
+    sandbox_download "$sandbox" "${WORKSPACE_PATH}/${f}" "${dest}/" 1 || dl_rc=$?
+    if [[ "$dl_rc" -eq 0 ]]; then
       count=$((count + 1))
-    else
+    elif [[ "$dl_rc" -eq 2 ]]; then
       echo -e "${DIM}[backup]${NC} Optional ${f} not in sandbox — skipped (normal until created)."
+    else
+      fail "Fatal error downloading optional file ${f} (exit code ${dl_rc})."
     fi
   done
 
   for d in "${DIRS_OPTIONAL[@]}"; do
-    if sandbox_download "$sandbox" "${WORKSPACE_PATH}/${d}/" "${dest}/${d}/" 1; then
+    local dl_rc=0
+    sandbox_download "$sandbox" "${WORKSPACE_PATH}/${d}/" "${dest}/${d}/" 1 || dl_rc=$?
+    if [[ "$dl_rc" -eq 0 ]]; then
       count=$((count + 1))
-    else
+    elif [[ "$dl_rc" -eq 2 ]]; then
       echo -e "${DIM}[backup]${NC} Optional ${d}/ not in sandbox — skipped (normal until created)."
+    else
+      fail "Fatal error downloading optional directory ${d}/ (exit code ${dl_rc})."
     fi
   done
 
@@ -99,6 +115,8 @@ do_backup() {
     fail "No files were backed up. Check that the sandbox '${sandbox}' exists and has workspace files."
   fi
 
+  # Machine-readable output for callers (e.g., upgrade-sandbox.sh).
+  echo "BACKUP_TS=${ts}"
   info "Backup saved to ${dest}/ (${count} items)"
 }
 
@@ -123,6 +141,14 @@ do_restore() {
 
   local src="${BACKUP_BASE}/${ts}"
   [ -d "$src" ] || fail "Backup directory not found: ${src}"
+  # Verify backup was created for this sandbox (or allow override).
+  if [ -f "${src}/.sandbox-name" ]; then
+    local origin
+    origin="$(cat "${src}/.sandbox-name")"
+    if [ "$origin" != "$sandbox" ]; then
+      fail "Backup in ${src}/ was created for sandbox '${origin}', not '${sandbox}'. Use a different timestamp or back up the correct sandbox."
+    fi
+  fi
 
   info "Restoring workspace to sandbox '${sandbox}' from ${src}..."
 

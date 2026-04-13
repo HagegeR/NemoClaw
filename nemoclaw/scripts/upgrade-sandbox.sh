@@ -89,24 +89,20 @@ BACKUP_WORKSPACE="${REPO_ROOT}/scripts/backup-workspace.sh"
 
 info "Sandbox: ${SANDBOX}"
 info "Step 1/3: Workspace backup (SOUL, USER, identity, etc.)..."
-bash "$BACKUP_WORKSPACE" backup "$SANDBOX"
+BACKUP_OUTPUT="$(bash "$BACKUP_WORKSPACE" backup "$SANDBOX")"
+echo "$BACKUP_OUTPUT" # preserve original output for the user
 
-TS=""
-if [ -d "$BACKUP_BASE" ]; then
-  # shellcheck disable=SC2012  # backup dirs are YYYYMMDD-HHMMSS — no special chars
-  TS="$(ls -1t "$BACKUP_BASE" 2>/dev/null | head -n1 || true)"
-fi
-[ -n "$TS" ] || fail "No backup directory found under ${BACKUP_BASE}/"
+TS="$(echo "$BACKUP_OUTPUT" | grep '^BACKUP_TS=' | tail -1 | cut -d= -f2)"
+[ -n "$TS" ] || fail "Could not determine backup timestamp from backup output."
 DEST="${BACKUP_BASE}/${TS}"
-info "Latest backup directory: ${DEST}/"
+info "Backup directory: ${DEST}/"
 
 if [ "$FULL_DATA" -eq 1 ]; then
   info "Step 2/3: Full OpenClaw snapshot (/sandbox/.openclaw-data/)..."
-  mkdir -p "${DEST}/openclaw-data"
   if openshell sandbox download "$SANDBOX" /sandbox/.openclaw-data/ "${DEST}/openclaw-data/"; then
     info "Saved openclaw-data under ${DEST}/openclaw-data/"
   else
-    warn "openclaw-data download failed or was empty; workspace files in ${DEST}/ are still valid."
+    fail "--full-data was requested but openclaw-data download failed. Workspace backup in ${DEST}/ is still valid."
   fi
 else
   info "Step 2/3: Skipped full openclaw-data (--full-data not set)."
