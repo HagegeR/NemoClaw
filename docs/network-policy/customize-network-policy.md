@@ -2,7 +2,9 @@
 title:
   page: "Customize the NemoClaw Sandbox Network Policy"
   nav: "Customize Network Policy"
-description: "Add, remove, or modify allowed endpoints in the sandbox policy."
+description:
+  main: "Add, remove, or modify allowed endpoints in the sandbox policy."
+  agent: "Adds, removes, or modifies allowed endpoints in the sandbox policy. Use when customizing network policy, changing egress rules, or configuring sandbox endpoint access."
 keywords: ["customize nemoclaw network policy", "sandbox egress policy configuration"]
 topics: ["generative_ai", "ai_agents"]
 tags: ["openclaw", "openshell", "network_policy", "security", "nemoclaw"]
@@ -81,7 +83,7 @@ Follow the same format as the baseline policy in `nemoclaw-blueprint/policies/op
 Use the OpenShell CLI to apply the policy update:
 
 ```console
-$ openshell policy set <policy-file>
+$ openshell policy set --policy <policy-file> <sandbox-name>
 ```
 
 The change takes effect immediately.
@@ -101,9 +103,11 @@ Available presets:
 
 | Preset | Endpoints |
 |--------|-----------|
+| `brave` | Brave Search API |
+| `brew` | Homebrew (Linuxbrew) package manager |
 | `discord` | Discord webhook API |
-| `docker` | Docker Hub, NVIDIA container registry |
-| `huggingface` | Hugging Face model registry |
+| `github` | GitHub and GitHub REST API |
+| `huggingface` | Hugging Face Hub (download-only) and inference router |
 | `jira` | Atlassian Jira API |
 | `npm` | npm and Yarn registries |
 | `outlook` | Microsoft 365 and Outlook |
@@ -114,7 +118,7 @@ Available presets:
 To apply a preset to a running sandbox, pass it as a policy file:
 
 ```console
-$ openshell policy set nemoclaw-blueprint/policies/presets/pypi.yaml
+$ openshell policy set --policy nemoclaw-blueprint/policies/presets/pypi.yaml my-assistant
 ```
 
 To include a preset in the baseline, merge its entries into `openclaw-sandbox.yaml` and re-run `nemoclaw onboard`.
