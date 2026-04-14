@@ -391,6 +391,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../get-started/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/windows-setup.html">Windows Prerequisites</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul class="current nav bd-sidenav">
@@ -415,14 +416,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workspace</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../workspace/workspace-files.html">Workspace Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Back Up and Restore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Backup &amp; Restore</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
@@ -612,6 +613,40 @@ Endpoints that return <code class="docutils literal notranslate"><span class="pr
 </table>
 </div>
 </section>
+<section id="forcing-chat-completions-api">
+<h3>Forcing Chat Completions API<a class="headerlink" href="#forcing-chat-completions-api" title="Link to this heading">#</a></h3>
+<p>Some OpenAI-compatible servers (such as SGLang) expose <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> but do
+not emit the granular streaming events that OpenClaw requires.
+NemoClaw tests streaming events during onboarding and falls back to
+<code class="docutils literal notranslate"><span class="pre">/v1/chat/completions</span></code> automatically when it detects incomplete streaming.</p>
+<p>If you need to bypass the <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> probe entirely, set
+<code class="docutils literal notranslate"><span class="pre">NEMOCLAW_PREFERRED_API</span></code> before running onboard:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">NEMOCLAW_PREFERRED_API</span><span class="o">=</span>openai-completions<span class="w"> </span>nemoclaw<span class="w"> </span>onboard
+</pre></div>
+</div>
+<p>Set this variable to make the wizard skip the <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> probe and use
+<code class="docutils literal notranslate"><span class="pre">/v1/chat/completions</span></code> directly.
+You can use it in both interactive and non-interactive mode.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Values</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NEMOCLAW_PREFERRED_API</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">openai-completions</span></code>, <code class="docutils literal notranslate"><span class="pre">chat-completions</span></code></p></td>
+<td><p>unset (auto-detect)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If you already onboarded and the sandbox is failing at runtime, re-run
+<code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> to re-probe the endpoint and bake the correct API path
+into the image.
+Refer to <a class="reference internal" href="switch-inference-providers.html"><span class="std std-doc">Switch Inference Models</span></a> for details.</p>
+</section>
 </section>
 <section id="anthropic-compatible-server">
 <h2>Anthropic-Compatible Server<a class="headerlink" href="#anthropic-compatible-server" title="Link to this heading">#</a></h2>
@@ -775,6 +810,7 @@ Refer to <a class="reference internal" href="switch-inference-providers.html"><s
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openai-compatible-server">OpenAI-Compatible Server</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Interactive Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forcing-chat-completions-api">Forcing Chat Completions API</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anthropic-compatible-server">Anthropic-Compatible Server</a></li>

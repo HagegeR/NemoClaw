@@ -391,6 +391,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../get-started/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/windows-setup.html">Windows Prerequisites</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul class="nav bd-sidenav">
@@ -415,14 +416,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workspace</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../workspace/workspace-files.html">Workspace Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Back Up and Restore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Backup &amp; Restore</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current nav bd-sidenav">
@@ -580,6 +581,14 @@ Instead, configure npm to use a directory you own:</p>
 </div>
 <p>Add the <code class="docutils literal notranslate"><span class="pre">export</span></code> line to your <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.zshrc</span></code> to make it permanent, then re-run the installer.</p>
 </section>
+<section id="installer-fails-on-nvidia-jetson">
+<h3>Installer fails on NVIDIA Jetson<a class="headerlink" href="#installer-fails-on-nvidia-jetson" title="Link to this heading">#</a></h3>
+<p>The installer auto-detects NVIDIA Jetson devices (Orin and Thor) and applies required host configuration before the normal install flow.
+If the Jetson setup step fails, verify that you have <code class="docutils literal notranslate"><span class="pre">sudo</span></code> access and that Docker is installed and running.</p>
+<p>For JetPack 6 (L4T 36.x), the setup switches iptables to legacy mode and adjusts the Docker daemon configuration.
+For JetPack 7 (L4T 38.x / Thor), only bridge netfilter and sysctl settings are applied.</p>
+<p>If the L4T version is not recognized, the setup step is skipped and the installer continues normally.</p>
+</section>
 <section id="port-already-in-use">
 <h3>Port already in use<a class="headerlink" href="#port-already-in-use" title="Link to this heading">#</a></h3>
 <p>The NemoClaw gateway uses port <code class="docutils literal notranslate"><span class="pre">18789</span></code> by default.
@@ -605,6 +614,17 @@ Current OpenShell releases handle that behavior themselves, so NemoClaw no longe
 </div>
 <p>Podman is not a tested runtime.
 If onboarding or sandbox lifecycle fails, switch to a tested runtime (Docker Desktop, Colima, or Docker Engine) and rerun onboarding.</p>
+</section>
+<section id="openshell-version-above-maximum">
+<h3>OpenShell version above maximum<a class="headerlink" href="#openshell-version-above-maximum" title="Link to this heading">#</a></h3>
+<p>Each NemoClaw release validates against a range of tested OpenShell versions.
+If the installed OpenShell version exceeds the configured maximum, <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> exits with an error:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✗ openshell &lt;version&gt; is above the maximum supported by this NemoClaw release.
+  blueprint.yaml max_openshell_version: &lt;max&gt;
+</pre></div>
+</div>
+<p>Upgrade NemoClaw to a version that supports your OpenShell release, or install a supported OpenShell version from the <a class="reference external" href="https://github.com/NVIDIA/OpenShell/releases" rel="noreferer noopener" target="_blank">OpenShell releases page</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">install-openshell.sh</span></code> script also enforces this constraint and pins fresh installs to the validated maximum version.</p>
 </section>
 <section id="invalid-sandbox-name">
 <h3>Invalid sandbox name<a class="headerlink" href="#invalid-sandbox-name" title="Link to this heading">#</a></h3>
@@ -719,6 +739,28 @@ If large prompts still cause timeouts, increase it with <code class="docutils li
 </pre></div>
 </div>
 </section>
+<section id="agent-fails-at-runtime-after-onboarding-succeeds-with-a-compatible-endpoint">
+<h3>Agent fails at runtime after onboarding succeeds with a compatible endpoint<a class="headerlink" href="#agent-fails-at-runtime-after-onboarding-succeeds-with-a-compatible-endpoint" title="Link to this heading">#</a></h3>
+<p>Some OpenAI-compatible servers (such as SGLang) expose <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> and pass
+the onboarding validation probe, but their streaming mode is incomplete.
+OpenClaw requires granular streaming events like <code class="docutils literal notranslate"><span class="pre">response.output_text.delta</span></code>
+that these backends do not emit.</p>
+<p>NemoClaw now tests streaming events during the <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> probe and falls
+back to <code class="docutils literal notranslate"><span class="pre">/v1/chat/completions</span></code> automatically.
+If you onboarded before this check was added, re-run onboarding so the wizard
+re-probes the endpoint and bakes the correct API path into the image:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard
+</pre></div>
+</div>
+<p>To force <code class="docutils literal notranslate"><span class="pre">/v1/chat/completions</span></code> without re-probing, set <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_PREFERRED_API</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">NEMOCLAW_PREFERRED_API</span><span class="o">=</span>openai-completions<span class="w"> </span>nemoclaw<span class="w"> </span>onboard
+</pre></div>
+</div>
+<p>Do not rely on <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_INFERENCE_API_OVERRIDE</span></code> alone — it patches the config
+at container startup but does not update the Dockerfile ARG baked into the
+image.
+A fresh <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> is the reliable fix.</p>
+</section>
 <section id="nemoclaw-disable-device-auth-1-does-not-change-an-existing-sandbox">
 <h3><code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH=1</span></code> does not change an existing sandbox<a class="headerlink" href="#nemoclaw-disable-device-auth-1-does-not-change-an-existing-sandbox" title="Link to this heading">#</a></h3>
 <p>This is expected behavior.
@@ -766,6 +808,18 @@ If logs show errors such as <code class="docutils literal notranslate"><span cla
 <li><p>treat the failure as a native Discord gateway problem, not as a bridge startup problem</p></li>
 </ul>
 </section>
+<section id="landlock-filesystem-restrictions-silently-degraded">
+<h3>Landlock filesystem restrictions silently degraded<a class="headerlink" href="#landlock-filesystem-restrictions-silently-degraded" title="Link to this heading">#</a></h3>
+<p>After sandbox creation, NemoClaw checks whether the host kernel supports Landlock (Linux 5.13+).
+If the kernel is too old or you are running on macOS (where the Docker VM kernel may lack Landlock), a warning prints:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⚠ Landlock: Docker VM kernel &lt;version&gt; does not support Landlock (requires ≥5.13).
+  Sandbox filesystem restrictions will silently degrade (best_effort mode).
+</pre></div>
+</div>
+<p>This warning is informational and does not block sandbox creation.
+The sandbox runs without kernel-level filesystem restrictions, relying on container mount configuration instead.
+For full filesystem enforcement, run on a Linux kernel 5.13 or later (Ubuntu 22.04 LTS and later include Landlock support).</p>
+</section>
 <section id="sandbox-lost-after-gateway-restart">
 <h3>Sandbox lost after gateway restart<a class="headerlink" href="#sandbox-lost-after-gateway-restart" title="Link to this heading">#</a></h3>
 <p>Sandboxes created with OpenShell versions older than 0.0.24 can become unreachable after a gateway restart because SSH secrets were not persisted.
@@ -801,6 +855,59 @@ Refer to <a class="reference internal" href="../network-policy/customize-network
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--follow</span></code> to stream logs in real time while debugging.</p>
+</section>
+</section>
+<section id="windows-subsystem-for-linux">
+<span id="windows-wsl-2"></span><h2>Windows Subsystem for Linux<a class="headerlink" href="#windows-subsystem-for-linux" title="Link to this heading">#</a></h2>
+<p>For environment setup steps, see <a class="reference internal" href="../get-started/windows-setup.html"><span class="std std-doc">Windows Prerequisites</span></a>.</p>
+<section id="wsl-install-no-distribution-returns-forbidden-403">
+<h3><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">--no-distribution</span></code> returns Forbidden (403)<a class="headerlink" href="#wsl-install-no-distribution-returns-forbidden-403" title="Link to this heading">#</a></h3>
+<p>Check your network connectivity.
+If you are behind a VPN, try reconnecting or switching to a different network.</p>
+</section>
+<section id="wsl-d-ubuntu-says-there-is-no-distribution-with-the-supplied-name">
+<h3><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">-d</span> <span class="pre">Ubuntu</span></code> says “There is no distribution with the supplied name”<a class="headerlink" href="#wsl-d-ubuntu-says-there-is-no-distribution-with-the-supplied-name" title="Link to this heading">#</a></h3>
+<p>The Ubuntu package was installed with <code class="docutils literal notranslate"><span class="pre">--no-launch</span></code> but never registered.
+Run <code class="docutils literal notranslate"><span class="pre">ubuntu.exe</span> <span class="pre">install</span> <span class="pre">--root</span></code> from PowerShell to register it, or reinstall without <code class="docutils literal notranslate"><span class="pre">--no-launch</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>wsl<span class="w"> </span>--unregister<span class="w"> </span>Ubuntu
+<span class="gp">$ </span>wsl<span class="w"> </span>--install<span class="w"> </span>-d<span class="w"> </span>Ubuntu
+</pre></div>
+</div>
+</section>
+<section id="docker-info-fails-inside-wsl">
+<h3><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">info</span></code> fails inside WSL<a class="headerlink" href="#docker-info-fails-inside-wsl" title="Link to this heading">#</a></h3>
+<p>Confirm that Docker Desktop is running and that WSL integration is enabled for Ubuntu (Settings &gt; Resources &gt; WSL integration).
+Then restart WSL:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>wsl<span class="w"> </span>--shutdown
+<span class="gp">$ </span>wsl<span class="w"> </span>-d<span class="w"> </span>Ubuntu
+<span class="gp">$ </span>docker<span class="w"> </span>info
+</pre></div>
+</div>
+</section>
+<section id="ollama-inference-fails-or-hangs-in-wsl">
+<h3>Ollama inference fails or hangs in WSL<a class="headerlink" href="#ollama-inference-fails-or-hangs-in-wsl" title="Link to this heading">#</a></h3>
+<p>Ollama configures context length based on your hardware.
+On some GPUs (for example RTX 3500), the default context length is not sufficient for OpenClaw.
+Force a larger context length:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pkill<span class="w"> </span>-f<span class="w"> </span><span class="s1">&#39;ollama serve&#39;</span>
+<span class="gp">$ </span><span class="nv">OLLAMA_CONTEXT_LENGTH</span><span class="o">=</span><span class="m">16384</span><span class="w"> </span>ollama<span class="w"> </span>serve
+</pre></div>
+</div>
+<p>Verify that Ollama inference works:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>&lt;model-id&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;model-id&gt;</span></code> with the model you selected during onboarding (for example <code class="docutils literal notranslate"><span class="pre">qwen3.5:4b</span></code>).</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ollama</span> <span class="pre">serve</span></code> fails with <code class="docutils literal notranslate"><span class="pre">Error:</span> <span class="pre">listen</span> <span class="pre">tcp</span> <span class="pre">127.0.0.1:11434:</span> <span class="pre">bind:</span> <span class="pre">address</span> <span class="pre">already</span> <span class="pre">in</span> <span class="pre">use</span></code>, check whether Ollama is configured for automatic startup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ollama
+</pre></div>
+</div>
+<p>If it is active, stop it first, then start with the custom context length:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>ollama
+<span class="gp">$ </span><span class="nv">OLLAMA_CONTEXT_LENGTH</span><span class="o">=</span><span class="m">16384</span><span class="w"> </span>ollama<span class="w"> </span>serve
+</pre></div>
+</div>
+<p>For additional troubleshooting, see the <a class="reference internal" href="../get-started/quickstart.html"><span class="std std-doc">Quickstart</span></a> and <a class="reference internal" href="../get-started/windows-setup.html"><span class="std std-doc">Windows Setup</span></a> pages.</p>
 </section>
 </section>
 <section id="podman">
@@ -870,11 +977,13 @@ If you encounter issues with Podman, switch to a tested runtime (Docker Engine, 
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#macos-first-run-failures">macOS first-run failures</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permission-errors-during-installation">Permission errors during installation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#npm-install-fails-with-permission-errors">npm install fails with permission errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installer-fails-on-nvidia-jetson">Installer fails on NVIDIA Jetson</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#port-already-in-use">Port already in use</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#onboarding">Onboarding</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cgroup-v2-errors-during-onboard">Cgroup v2 errors during onboard</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openshell-version-above-maximum">OpenShell version above maximum</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invalid-sandbox-name">Invalid sandbox name</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sandbox-creation-fails-on-dgx">Sandbox creation fails on DGX</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#colima-socket-not-detected-macos">Colima socket not detected (macOS)</a></li>
@@ -886,13 +995,22 @@ If you encounter issues with Podman, switch to a tested runtime (Docker Engine, 
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sandbox-shows-as-stopped">Sandbox shows as stopped</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#status-shows-not-running-inside-the-sandbox">Status shows “not running” inside the sandbox</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-requests-time-out">Inference requests time out</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-fails-at-runtime-after-onboarding-succeeds-with-a-compatible-endpoint">Agent fails at runtime after onboarding succeeds with a compatible endpoint</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nemoclaw-disable-device-auth-1-does-not-change-an-existing-sandbox"><code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH=1</span></code> does not change an existing sandbox</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openclaw-doctor-fix-cannot-repair-discord-channel-config-inside-the-sandbox"><code class="docutils literal notranslate"><span class="pre">openclaw</span> <span class="pre">doctor</span> <span class="pre">--fix</span></code> cannot repair Discord channel config inside the sandbox</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discord-bot-logs-in-but-the-channel-still-does-not-work">Discord bot logs in, but the channel still does not work</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#landlock-filesystem-restrictions-silently-degraded">Landlock filesystem restrictions silently degraded</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sandbox-lost-after-gateway-restart">Sandbox lost after gateway restart</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-cannot-reach-external-hosts-through-a-proxy">Agent cannot reach external hosts through a proxy</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-cannot-reach-an-external-host">Agent cannot reach an external host</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#blueprint-run-failed">Blueprint run failed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windows-subsystem-for-linux">Windows Subsystem for Linux</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wsl-install-no-distribution-returns-forbidden-403"><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">--no-distribution</span></code> returns Forbidden (403)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wsl-d-ubuntu-says-there-is-no-distribution-with-the-supplied-name"><code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">-d</span> <span class="pre">Ubuntu</span></code> says “There is no distribution with the supplied name”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-info-fails-inside-wsl"><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">info</span></code> fails inside WSL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ollama-inference-fails-or-hangs-in-wsl">Ollama inference fails or hangs in WSL</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#podman">Podman</a></li>
